@@ -1,0 +1,5 @@
+{
+  "_comment": "Hand-reviewed decisions applied after the keyword screen. Every rule needs exhibit, pe_or_bli and reason; 'account' (appropriation code) is optional and narrows the rule. 'include' adds a line no keyword caught; 'exclude' drops a false hit. Excluded lines are listed in data/lines.json under 'excluded' so nothing disappears silently.",
+  "include": [],
+  "exclude": []
+}

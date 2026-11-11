@@ -3,50 +3,114 @@
  "generated_at": "2026-11-11T20:40:00+00:00",
  "units": "thousands of US dollars, as printed in the exhibit",
  "method": "case-insensitive keyword screen of line titles; see README",
- "note": "No live rows yet. The build sandbox could not reach comptroller.war.gov or comptroller.defense.gov (proxy answered 403 to CONNECT). Run `python3 extract.py --fetch` from an unrestricted machine to fill this file. No figures here are invented; the viewer's demo mode uses data/sample.json, which is synthetic.",
+ "note": "No live rows yet. The build sandbox could not reach comptroller.war.gov or comptroller.defense.gov (proxy answered 403 to CONNECT). The FY2026 P-1/R-1 files are being fetched from an unrestricted machine into sources/fy2026/; then `python3 extract.py --local` fills this file. No figures here are invented; the viewer's demo mode uses data/sample.json, which is synthetic.",
  "keywords": [
   {
    "label": "counter-UAS",
    "regex": "\\bcounter[\\s-]*(?:small[\\s-]*)?(?:s?UAS|unmanned)",
-   "category": "C-UAS"
+   "category": "C-UAS",
+   "tier": "core"
   },
   {
    "label": "C-UAS",
    "regex": "\\bC[\\s-]?s?UAS\\b",
-   "category": "C-UAS"
+   "category": "C-UAS",
+   "tier": "core"
   },
   {
    "label": "counter-small UAS",
    "regex": "\\bcounter[\\s-]*small[\\s-]*(?:UAS|unmanned)",
-   "category": "C-UAS"
+   "category": "C-UAS",
+   "tier": "core"
   },
   {
    "label": "UAS",
    "regex": "\\bs?UAS\\b",
-   "category": "UAS"
+   "category": "UAS",
+   "tier": "core"
   },
   {
    "label": "unmanned aircraft",
    "regex": "\\bunmanned[\\s-]+aircraft",
-   "category": "UAS"
+   "category": "UAS",
+   "tier": "core"
   },
   {
    "label": "drone",
    "regex": "\\bdrones?\\b",
-   "category": "UAS"
+   "category": "UAS",
+   "tier": "core"
   },
   {
    "label": "loitering munition",
    "regex": "\\bloiter(?:ing)?[\\s-]+munitions?\\b",
-   "category": "UAS"
+   "category": "UAS",
+   "tier": "core"
   },
   {
    "label": "Replicator",
    "regex": "\\breplicator\\b",
-   "category": "UAS"
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "counter (abbrev.)",
+   "regex": "\\b(?:ctr|cntr|counter)[\\s-]*(?:sm(?:all)?[\\s-]*)?(?:s?UAVs?\\b|unman)",
+   "category": "C-UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "UAV",
+   "regex": "\\bs?UAVs?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "unmanned aerial",
+   "regex": "\\bunmanned[\\s-]+aerial",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "unmanned air (abbrev.)",
+   "regex": "\\bunman(?:ned)?[\\s-]+air\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "uncrewed",
+   "regex": "\\buncrewed[\\s-]+(?:aircraft|aerial|air)\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "RPA",
+   "regex": "\\bRPAs?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "collaborative combat aircraft",
+   "regex": "\\bcollaborative[\\s-]+combat[\\s-]+aircraft",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "MQ-/RQ- designation",
+   "regex": "\\b[MR]Q[\\s-]?\\d{1,2}[A-Z]?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "platform name",
+   "regex": "\\b(?:gr[ae]y[\\s-]+eagle|global[\\s-]+hawk|triton|reaper|stingray|switchblade)\\b",
+   "category": "UAS",
+   "tier": "extended"
   }
  ],
  "sources": [],
  "unreadable": [],
- "rows": []
+ "rows": [],
+ "excluded": [],
+ "overrides_file": "overrides.json"
 }

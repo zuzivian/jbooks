@@ -1,5 +1,5 @@
 {
-  "_comment": "Machine-readable DoD budget exhibits screened by extract.py. Amounts in these exhibits are in thousands of dollars. Verify URLs each budget cycle: the Comptroller site moved from comptroller.defense.gov to comptroller.war.gov in 2025.",
+  "_comment": "Machine-readable DoD budget exhibits screened by extract.py. Amounts in these exhibits are in thousands of dollars. Verify URLs each budget cycle: the Comptroller site moved from comptroller.defense.gov to comptroller.war.gov in 2025. 'local' is where --fetch saves the file and --local reads it; set 'sha256' once a copy is committed so later runs verify it.",
   "index_page": "https://comptroller.war.gov/Budget-Materials/Budget2026/",
   "sources": [
     {
@@ -8,7 +8,9 @@
       "fiscal_year": 2026,
       "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
       "pdf_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/FY2026_p1.pdf",
-      "url_status": "listed in web search results for the FY2026 folder; not downloaded from this sandbox"
+      "url_status": "listed in web search results for the FY2026 folder; not downloaded from this sandbox",
+      "local": "sources/fy2026/p1_display.xlsx",
+      "sha256": null
     },
     {
       "id": "fy2026-r1",
@@ -16,7 +18,9 @@
       "fiscal_year": 2026,
       "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
       "pdf_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/FY2026_r1.pdf",
-      "url_status": "UNVERIFIED: inferred from the P-1 filename pattern; confirm on the index page before relying on it"
+      "url_status": "UNVERIFIED: inferred from the P-1 filename pattern; confirm on the index page before relying on it",
+      "local": "sources/fy2026/r1_display.xlsx",
+      "sha256": null
     }
   ]
 }

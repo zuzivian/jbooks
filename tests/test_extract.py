@@ -16,6 +16,9 @@ class KeywordTests(unittest.TestCase):
     def cat(self, s):
         return extract.match_keywords(s)[1]
 
+    def tier(self, s):
+        return extract.match_keywords(s)[2]
+
     def test_positive(self):
         for s, c in [
             ("Counter-Small UAS Prototype", "C-UAS"),
@@ -31,8 +34,17 @@ class KeywordTests(unittest.TestCase):
             self.assertEqual(self.cat(s), c, s)
 
     def test_negative(self):
-        for s in ["Guasave Study", "Casual Pay", "Tactical Radio", "Unmanned Surface Vessel", "MQ-9 UAV"]:
+        for s in ["Guasave Study", "Casual Pay", "Tactical Radio", "Unmanned Surface Vessel", "Squadron Ops",
+                  "Torque Wrench", "Grasp Program"]:
             self.assertIsNone(self.cat(s), s)
+
+    def test_tiers(self):
+        self.assertEqual(self.tier("SMALL UAS"), "core")
+        self.assertEqual(self.tier("Counter-UAS and UAV support"), "core")
+        for s, c in [("MQ-9 UAV", "UAS"), ("RQ-4 Global Hawk", "UAS"), ("Unmanned Aerial Vehicle", "UAS"),
+                     ("CTR SM UNMAN AIR SYS", "C-UAS"), ("Collaborative Combat Aircraft", "UAS"),
+                     ("MQ-25 Stingray", "UAS"), ("Uncrewed Aircraft", "UAS"), ("RPA Training", "UAS")]:
+            self.assertEqual((self.cat(s), self.tier(s)), (c, "extended"), s)
 
     def test_service(self):
         self.assertEqual(extract.service_of("Procurement of Ammo, Navy & Marine Corps"), "Navy")
@@ -51,22 +63,32 @@ class EndToEnd(unittest.TestCase):
         extract.main(["--sources", str(FIX / "sources.json"),
                       "--input", f"{FIX / 'synthetic_r1.xlsx'}=synthetic-r1",
                       "--input", f"{FIX / 'synthetic_p1.xlsx'}=synthetic-p1",
+                      "--overrides", str(FIX / "overrides.json"),
                       "--status", "synthetic", "--out", str(out)])
         return json.loads(out.read_text())
 
     def test_rows(self):
         d = self.run_extract()
         titles = {r["title"] for r in d["rows"]}
-        self.assertEqual(len(d["rows"]), 6, titles)
-        self.assertNotIn("Synthetic Tactical Radio", titles)
+        # 7 keyword hits (6 core + 1 extended), minus 1 excluded, plus 1 included = 7
+        self.assertEqual(len(d["rows"]), 7, titles)
+        self.assertIn("Synthetic Tactical Radio", titles)          # forced in by override
+        self.assertNotIn("Synthetic Drone Swarm Experiment", titles)  # dropped by override
+        self.assertEqual(d["excluded"][0]["pe_or_bli"], "TEST0004F")
+        radio = next(r for r in d["rows"] if r["pe_or_bli"] == "TEST0002A")
+        self.assertEqual((radio["match_tier"], radio["category"]), ("override", "C-UAS"))
+        self.assertEqual(next(r for r in d["rows"] if r["pe_or_bli"] == "TEST0007F")["match_tier"], "extended")
         self.assertTrue(all(r["source_url"] for r in d["rows"]))
 
     def test_amounts_and_unreadable(self):
         d = self.run_extract()
-        drone = next(r for r in d["rows"] if "Drone" in r["title"])
+        out = pathlib.Path(tempfile.mkdtemp()) / "out.json"
+        extract.main(["--sources", str(FIX / "sources.json"), "--overrides", "",
+                      "--input", f"{FIX / 'synthetic_r1.xlsx'}=synthetic-r1", "--out", str(out)])
+        drone = next(r for r in json.loads(out.read_text())["rows"] if "Drone" in r["title"])
         self.assertNotIn("FY 2026 Disc Request", drone["amounts_thousands"])
         self.assertEqual(drone["amounts_thousands"]["FY 2026 Total"], 250)
-        self.assertEqual(d["unreadable"][0]["raw"], "see note")
+        self.assertEqual(json.loads(out.read_text())["unreadable"][0]["raw"], "see note")
         p1 = next(r for r in d["rows"] if "C-sUAS" in r["title"])
         self.assertNotIn("FY 2024 Quantity", p1["amounts_thousands"])
         self.assertEqual(p1["pe_or_bli"], "TEST1001A")
@@ -77,3 +99,11 @@ class EndToEnd(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OverrideValidation(unittest.TestCase):
+    def test_reason_required(self):
+        p = pathlib.Path(tempfile.mkdtemp()) / "o.json"
+        p.write_text(json.dumps({"exclude": [{"exhibit": "R-1", "pe_or_bli": "X"}]}))
+        with self.assertRaises(ValueError):
+            extract.load_overrides(p)

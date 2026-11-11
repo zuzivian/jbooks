@@ -8,7 +8,7 @@ A research tool that pulls drone (UAS) and counter-UAS (C-UAS) budget lines out 
 
 - `extract.py` reads the Comptroller's R-1 (RDT&E) and P-1 (Procurement) exhibit spreadsheets and writes `data/lines.json`.
 - `index.html` is a static viewer with search, service and category filters, a choice of amount column, and sort by amount.
-- **`data/lines.json` has no live rows yet.** The sandbox this was built in couldn't reach the DoD hosts (`comptroller.war.gov` and `comptroller.defense.gov`; the egress proxy answered 403 to CONNECT). The extractor has only been run end to end against synthetic fixtures. To fill the file, run `python3 extract.py --fetch` on a normal machine.
+- **`data/lines.json` has no live rows yet.** The sandbox this was built in couldn't reach the DoD hosts (`comptroller.war.gov` and `comptroller.defense.gov`; the egress proxy answered 403 to CONNECT). The extractor has only been run end to end against synthetic fixtures. The FY2026 files are being fetched from an unrestricted machine into `sources/fy2026/`. To fill the file once they land, run `python3 extract.py --local`.
 - `data/sample.json` is **synthetic** output from `tests/fixtures/`. Its PE/BLI codes start with `TEST` and its dollar figures are made up. The viewer shows it only behind a red "Synthetic demo data" banner (`index.html?demo=1`).
 
 ## Source
@@ -35,32 +35,61 @@ Why these files: R-1 and P-1 are the department-wide line-item lists that sit on
 
 ### Keyword list
 
-Matching ignores case. A line is tagged **C-UAS** if any counter keyword matches; otherwise it's tagged **UAS**.
+Matching ignores case. A line is tagged **C-UAS** if any counter keyword matches; otherwise it's tagged **UAS**. Each keyword is in one of two tiers:
 
-| Keyword | Regex | Category |
-|---|---|---|
-| counter-UAS | `\bcounter[\s-]*(?:small[\s-]*)?(?:s?UAS\|unmanned)` | C-UAS |
-| C-UAS | `\bC[\s-]?s?UAS\b` | C-UAS |
-| counter-small UAS | `\bcounter[\s-]*small[\s-]*(?:UAS\|unmanned)` | C-UAS |
-| UAS | `\bs?UAS\b` | UAS |
-| unmanned aircraft | `\bunmanned[\s-]+aircraft` | UAS |
-| drone | `\bdrones?\b` | UAS |
-| loitering munition | `\bloiter(?:ing)?[\s-]+munitions?\b` | UAS |
-| Replicator | `\breplicator\b` | UAS |
+- **core** is the agreed starting list.
+- **extended** adds wider terms and a platform watch list. It catches more lines and more noise, so review those rows. The viewer's "Keyword set" filter shows each tier separately.
+
+| Keyword | Regex | Category | Tier |
+|---|---|---|---|
+| counter-UAS | `\bcounter[\s-]*(?:small[\s-]*)?(?:s?UAS\|unmanned)` | C-UAS | core |
+| C-UAS | `\bC[\s-]?s?UAS\b` | C-UAS | core |
+| counter-small UAS | `\bcounter[\s-]*small[\s-]*(?:UAS\|unmanned)` | C-UAS | core |
+| UAS | `\bs?UAS\b` | UAS | core |
+| unmanned aircraft | `\bunmanned[\s-]+aircraft` | UAS | core |
+| drone | `\bdrones?\b` | UAS | core |
+| loitering munition | `\bloiter(?:ing)?[\s-]+munitions?\b` | UAS | core |
+| Replicator | `\breplicator\b` | UAS | core |
+| counter (abbrev.) | `\b(?:ctr\|cntr\|counter)[\s-]*(?:sm(?:all)?[\s-]*)?(?:s?UAVs?\b\|unman)` | C-UAS | extended |
+| UAV | `\bs?UAVs?\b` | UAS | extended |
+| unmanned aerial | `\bunmanned[\s-]+aerial` | UAS | extended |
+| unmanned air (abbrev.) | `\bunman(?:ned)?[\s-]+air\b` | UAS | extended |
+| uncrewed | `\buncrewed[\s-]+(?:aircraft\|aerial\|air)\b` | UAS | extended |
+| RPA | `\bRPAs?\b` | UAS | extended |
+| collaborative combat aircraft | `\bcollaborative[\s-]+combat[\s-]+aircraft` | UAS | extended |
+| MQ-/RQ- designation | `\b[MR]Q[\s-]?\d{1,2}[A-Z]?\b` | UAS | extended |
+| platform name | `\b(?:gr[ae]y[\s-]+eagle\|global[\s-]+hawk\|triton\|reaper\|stingray\|switchblade)\b` | UAS | extended |
+
+The authoritative list is `KEYWORDS` in `extract.py`. A copy is written into every `data/lines.json`.
+
+### Hand-reviewed overrides (`overrides.json`)
+
+After the screen, each kept line is checked by hand. Record every decision with a reason:
+
+```json
+{
+  "exclude": [{"exhibit": "R-1", "pe_or_bli": "0604123A", "account": "2040A", "reason": "Triton here is a radar program, not the MQ-4C"}],
+  "include": [{"exhibit": "P-1", "pe_or_bli": "1234", "category": "C-UAS", "reason": "J-book P-40 says this line buys C-sUAS interceptors"}]
+}
+```
+
+- `exclude` drops a false hit. The dropped line is still listed under `excluded` in `data/lines.json`.
+- `include` adds a line no keyword caught. It shows in the viewer as "hand-added", with its reason.
+- `account` is optional and narrows a rule to one appropriation. A rule without a `reason` is rejected.
 
 ### Known misses
 
-- **UAV, "unmanned aerial", RPA, "uncrewed"** don't match. The list was kept to the agreed starting set, and adding these is decision 1 below.
-- **Platform-only titles** don't match, for example MQ-9 Reaper, RQ-4, MQ-25, MQ-4C or Gray Eagle. A platform watch list would catch them.
-- **Buried money**: UAS work inside a broad line, such as an Army "Aircraft Spares" line or a counter-air-defence PE, is invisible at line level.
+- **Platforms not on the watch list** are missed, and so are titles that name only a program office or contract name.
+- **Buried money**: UAS work inside a broad line, such as an Army "Aircraft Spares" line or a counter-air-defence PE, is invisible at line level. The fix is an `include` override backed by the J-book narrative.
 - **Classified lines** appear in the exhibits as aggregates or not at all.
-- **Abbreviations**: J-book titles are truncated in uppercase, for example "CTR SM UNMAN AIR SYS". Abbreviations like that are missed.
-- **Possible false positives**: "UAS" matches as a whole word, so an unrelated acronym spelled UAS would match. Each row shows its matched keywords so you can check.
+- **Unusual abbreviations**: J-book titles are truncated in uppercase. The extended tier catches common forms like "CTR SM UNMAN AIR SYS", but not every variant.
+- **False positives (extended tier)**: "Triton", "Reaper" and "RPA" can mean other things, and an MQ-/RQ- designation can sit on a sustainment or ground-station line. Each row shows its matched keywords; drop false hits with `exclude`.
 
 ## Refresh the data
 
 ```sh
-python3 extract.py --fetch                # downloads into raw/ (gitignored), writes data/lines.json
+python3 extract.py --fetch    # downloads each source to its "local" path (sources/fy2026/...), writes data/lines.json
+python3 extract.py --local    # re-screens the committed copies; checks the sha256 pinned in sources.json, if set
 # or, with files you downloaded in a browser:
 python3 extract.py --input ~/Downloads/p1_display.xlsx=fy2026-p1 --input ~/Downloads/r1_display.xlsx=fy2026-r1
 ```
@@ -84,6 +113,6 @@ python3 -m unittest discover -s tests
 
 ## Data schema (`data/lines.json`)
 
-`status` (`live` | `synthetic` | `not_fetched`), `generated_at`, `units`, `keywords[]`, `sources[]` (`id`, `exhibit`, `fiscal_year`, `url`, `sha256`, `lines_matched`), `unreadable[]`, and `rows[]` with:
+`status` (`live` | `synthetic` | `not_fetched`), `generated_at`, `units`, `keywords[]`, `sources[]` (`id`, `exhibit`, `fiscal_year`, `url`, `sha256`, `lines_matched`, `lines_excluded`), `overrides_file`, `excluded[]`, `unreadable[]`, and `rows[]` with:
 
-`id`, `exhibit`, `fiscal_year`, `line_number`, `pe_or_bli`, `title`, `service`, `organization`, `appropriation`, `budget_activity`, `classification`, `category`, `matched_keywords[]`, `amounts_thousands{column → number}`, `source_url`, `source_row`.
+`id`, `exhibit`, `fiscal_year`, `line_number`, `pe_or_bli`, `title`, `service`, `organization`, `appropriation`, `budget_activity`, `classification`, `category`, `match_tier` (`core` | `extended` | `override`), `matched_keywords[]`, `override_reason`, `amounts_thousands{column → number}`, `source_url`, `source_row`.

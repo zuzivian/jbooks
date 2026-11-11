@@ -33,7 +33,7 @@
   .banner.warn { background: var(--warn-bg); color: var(--warn-fg); }
   .banner.demo { background: var(--demo-bg); color: var(--demo-fg); font-weight: 600; }
   .banner button { margin-top: 8px; }
-  .controls { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr auto; gap: 8px; margin: 20px 0 12px; align-items: end; }
+  .controls { display: grid; grid-template-columns: 1.8fr 1fr 0.8fr 1fr 1.3fr auto; gap: 8px; margin: 20px 0 12px; align-items: end; }
   label { display: block; font-size: 12px; color: var(--muted); margin-bottom: 2px; }
   input, select, button { font: inherit; color: inherit; background: var(--card); border: 1px solid var(--line);
     border-radius: 6px; padding: 7px 9px; width: 100%; min-width: 0; }
@@ -76,7 +76,8 @@
   <div class="controls" id="controls" hidden>
     <div class="search"><label for="q">Search title, PE/BLI, appropriation</label><input id="q" type="search" placeholder="e.g. counter, MQ-, 0604"></div>
     <div><label for="svc">Service</label><select id="svc"><option value="">All services</option></select></div>
-    <div><label for="cat">Category</label><select id="cat"><option value="">UAS and C-UAS</option><option>UAS</option><option>C-UAS</option></select></div>
+    <div><label for="cat">Category</label><select id="cat"><option value="">All</option><option>UAS</option><option>C-UAS</option></select></div>
+    <div><label for="tier">Keyword set</label><select id="tier"><option value="">All</option><option value="core">Core only</option><option value="extended">Extended only</option><option value="override">Hand-added</option></select></div>
     <div><label for="col">Amount column ($K)</label><select id="col"></select></div>
     <div><button id="dir" type="button" aria-label="Sort direction">Largest first</button></div>
   </div>
@@ -92,9 +93,10 @@
     <h2>Sources and method</h2>
     <ul>
       <li><b>Sources.</b> The Comptroller's R-1 and P-1 exhibit spreadsheets for each budget request, listed in <code>sources.json</code>. FY2026 materials are indexed at <a href="https://comptroller.war.gov/Budget-Materials/Budget2026/">comptroller.war.gov/Budget-Materials/Budget2026</a>. Each row's "Source" link is the exact file it was read from, and <code>data/lines.json</code> records a SHA-256 hash of that file.</li>
-      <li><b>Screen.</b> A row is kept if its program-element or budget-line title matches any keyword: UAS, unmanned aircraft, counter-UAS, C-UAS, counter-small UAS, drone, loitering munition or Replicator. Matching ignores case. A line is tagged C-UAS if a counter keyword matches; otherwise it's tagged UAS.</li>
+      <li><b>Screen.</b> A row is kept if its program-element or budget-line title matches a keyword. The <i>core</i> list is UAS, unmanned aircraft, counter-UAS, C-UAS, counter-small UAS, drone, loitering munition and Replicator. The <i>extended</i> list adds UAV, unmanned aerial, RPA, uncrewed, collaborative combat aircraft, MQ-/RQ- designations, a few platform names, and abbreviated forms such as "CTR SM UNMAN AIR". Extended hits catch more lines and more noise. Matching ignores case. A line is tagged C-UAS if a counter keyword matches; otherwise it's tagged UAS.</li>
+      <li><b>Review.</b> <code>overrides.json</code> holds hand-reviewed decisions, each with a reason. It can drop a false hit or add a line no keyword caught. Dropped lines stay listed in the data file so nothing disappears silently.</li>
       <li><b>Amounts.</b> Figures are copied as printed, in thousands of dollars. A cell that isn't a plain number is left out of the row and listed in <code>unreadable</code>. Nothing is estimated or filled in.</li>
-      <li><b>Known misses.</b> Titles that say UAV, "unmanned aerial", RPA or only a platform name (for example MQ-9 or RQ-4) are not caught. Neither is UAS money buried inside broader lines. The exhibits are line-level, so a mixed line counts at its full value.</li>
+      <li><b>Known misses.</b> UAS money buried inside broader lines (aircraft spares, air-defence sensors, classified aggregates) is invisible at line level, as are platform names not on the watch list. The exhibits are line-level, so a mixed line counts at its full value.</li>
       <li><b>Not a tally.</b> Totals shown here are the sum of the matched lines. They are not DoD's count of UAS or C-UAS spending.</li>
     </ul>
     <p id="meta" class="sub"></p>
@@ -155,6 +157,7 @@
       (doc.sources || []).map(function (s) {
         return esc(s.exhibit) + " FY" + esc(s.fiscal_year) + ": " + esc(s.lines_matched) + " lines";
       }).join("; ");
+    if ((doc.excluded || []).length) meta += ". " + doc.excluded.length + " keyword hit(s) were excluded after review (listed in data/lines.json).";
     if ((doc.unreadable || []).length) meta += ". " + doc.unreadable.length + " amount cell(s) were not plain numbers and are omitted.";
     $("meta").innerHTML = meta;
     if (!state.rows.length) { $("controls").hidden = true; $("table").hidden = true; $("summary").innerHTML = ""; return; }
@@ -174,11 +177,12 @@
   }
 
   function render() {
-    var q = $("q").value.trim().toLowerCase(), svc = $("svc").value, cat = $("cat").value, col = $("col").value;
+    var q = $("q").value.trim().toLowerCase(), svc = $("svc").value, cat = $("cat").value, col = $("col").value, tier = $("tier").value;
     var amt = function (r) { var v = (r.amounts_thousands || {})[col]; return typeof v === "number" ? v : null; };
     var list = state.rows.filter(function (r) {
       if (svc && r.service !== svc) return false;
       if (cat && r.category !== cat) return false;
+      if (tier && (r.match_tier || "core") !== tier) return false;
       if (!q) return true;
       return [r.title, r.pe_or_bli, r.appropriation, r.budget_activity, r.line_number].join(" ").toLowerCase().indexOf(q) !== -1;
     });
@@ -209,7 +213,9 @@
       return "<tr>" +
         '<td><div class="t">' + esc(r.title) + '</div><div class="sub">' + esc(r.exhibit) + " line " + esc(r.line_number) +
           " · " + esc(r.pe_or_bli) + ' · <span class="tag' + (r.category === "C-UAS" ? " cuas" : "") + '">' + esc(r.category) +
-          '</span> <span class="sub">matched: ' + esc((r.matched_keywords || []).join(", ")) + "</span></div></td>" +
+          '</span> <span class="tag">' + esc(r.match_tier === "override" ? "hand-added" : (r.match_tier || "core")) + '</span> <span class="sub">' +
+          (r.override_reason ? "hand-added: " + esc(r.override_reason) : "matched: " + esc((r.matched_keywords || []).join(", "))) +
+          "</span></div></td>" +
         "<td>" + esc(r.service) + "</td>" +
         '<td><div>' + esc(r.appropriation) + '</div><div class="sub">' + esc(r.budget_activity) + "</div></td>" +
         '<td class="num" data-label="' + esc(col) + ' ($K)">' + (v === null ? "—" : fmtK(v)) + "</td>" +
@@ -225,7 +231,7 @@
       ". Serve this folder over HTTP (for example <code>python3 -m http.server</code>); browsers block local file reads.</div>";
   }
 
-  ["q", "svc", "cat", "col"].forEach(function (id) { $(id).addEventListener("input", render); });
+  ["q", "svc", "cat", "tier", "col"].forEach(function (id) { $(id).addEventListener("input", render); });
   $("dir").addEventListener("click", function () {
     state.desc = !state.desc; $("dir").textContent = state.desc ? "Largest first" : "Smallest first"; render();
   });

@@ -30,6 +30,8 @@ R1_ROWS = [
      "5", "TEST0005D", "Synthetic Replicator Initiative", "U", 7000, 8000, 9000, 0, 9000],
     ["0400D", "Research, Development, Test & Eval, Defense-Wide", "D", "03", "Advanced Technology Development",
      "6", "TEST0006D", "Synthetic Pivot Table Study (must NOT match: 'guas', 'casual')", "U", 1, 1, 1, 0, 1],
+    ["3600F", "Research, Development, Test & Eval, Air Force", "F", "07", "Operational System Development",
+     "7", "TEST0007F", "Synthetic MQ-9 UAV Upgrades", "U", 600, 700, 800, 0, 800],
 ]
 P1_HEADER = ["Account", "Account Title", "Organization", "Budget Activity", "Budget Activity Title",
              "Line Number", "Budget Line Item", "Budget Line Item (BLI) Title", "Classification",

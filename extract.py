@@ -5,11 +5,14 @@ Standard library only. Reads .xlsx files directly (they are zip archives of XML)
 so there is no parsing dependency to pin.
 
 Usage:
-  # Fetch every source in sources.json, then screen it:
+  # Fetch every source in sources.json to its local path, then screen it:
   python3 extract.py --fetch
 
+  # Screen the committed copies under sources/ (checks pinned sha256 if set):
+  python3 extract.py --local
+
   # Screen files you already downloaded (by hand, from a browser):
-  python3 extract.py --input raw/p1_display.xlsx=fy2026-p1 --input raw/r1_display.xlsx=fy2026-r1
+  python3 extract.py --input ~/Downloads/p1_display.xlsx=fy2026-p1 --input ~/Downloads/r1_display.xlsx=fy2026-r1
 
   # Screen an arbitrary file and say where it came from:
   python3 extract.py --input path.xlsx --source-url https://... --exhibit P-1 --out data/lines.json
@@ -37,32 +40,48 @@ REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 
 # ---------------------------------------------------------------------------
 # Keyword list. Matching is case-insensitive against the line title (and any
-# description column, if the exhibit has one). Each keyword has a category:
-# "C-UAS" wins over "UAS" when both match.
+# description column, if the exhibit has one). Each keyword has a category
+# ("C-UAS" wins over "UAS" when both match) and a tier:
+#   core     - the agreed starting list
+#   extended - wider terms and a platform watch list, added to catch titles the
+#              core list misses (UAV, RPA, MQ-9...). Higher recall, more noise;
+#              review these rows and use overrides.json to drop false hits.
 # ---------------------------------------------------------------------------
 KEYWORDS = [
-    # (label, regex, category)
-    ("counter-UAS", r"\bcounter[\s-]*(?:small[\s-]*)?(?:s?UAS|unmanned)", "C-UAS"),
-    ("C-UAS", r"\bC[\s-]?s?UAS\b", "C-UAS"),
-    ("counter-small UAS", r"\bcounter[\s-]*small[\s-]*(?:UAS|unmanned)", "C-UAS"),
-    ("UAS", r"\bs?UAS\b", "UAS"),
-    ("unmanned aircraft", r"\bunmanned[\s-]+aircraft", "UAS"),
-    ("drone", r"\bdrones?\b", "UAS"),
-    ("loitering munition", r"\bloiter(?:ing)?[\s-]+munitions?\b", "UAS"),
-    ("Replicator", r"\breplicator\b", "UAS"),
+    # (label, regex, category, tier)
+    ("counter-UAS", r"\bcounter[\s-]*(?:small[\s-]*)?(?:s?UAS|unmanned)", "C-UAS", "core"),
+    ("C-UAS", r"\bC[\s-]?s?UAS\b", "C-UAS", "core"),
+    ("counter-small UAS", r"\bcounter[\s-]*small[\s-]*(?:UAS|unmanned)", "C-UAS", "core"),
+    ("UAS", r"\bs?UAS\b", "UAS", "core"),
+    ("unmanned aircraft", r"\bunmanned[\s-]+aircraft", "UAS", "core"),
+    ("drone", r"\bdrones?\b", "UAS", "core"),
+    ("loitering munition", r"\bloiter(?:ing)?[\s-]+munitions?\b", "UAS", "core"),
+    ("Replicator", r"\breplicator\b", "UAS", "core"),
+    # extended
+    ("counter (abbrev.)", r"\b(?:ctr|cntr|counter)[\s-]*(?:sm(?:all)?[\s-]*)?(?:s?UAVs?\b|unman)", "C-UAS", "extended"),
+    ("UAV", r"\bs?UAVs?\b", "UAS", "extended"),
+    ("unmanned aerial", r"\bunmanned[\s-]+aerial", "UAS", "extended"),
+    ("unmanned air (abbrev.)", r"\bunman(?:ned)?[\s-]+air\b", "UAS", "extended"),
+    ("uncrewed", r"\buncrewed[\s-]+(?:aircraft|aerial|air)\b", "UAS", "extended"),
+    ("RPA", r"\bRPAs?\b", "UAS", "extended"),
+    ("collaborative combat aircraft", r"\bcollaborative[\s-]+combat[\s-]+aircraft", "UAS", "extended"),
+    ("MQ-/RQ- designation", r"\b[MR]Q[\s-]?\d{1,2}[A-Z]?\b", "UAS", "extended"),
+    ("platform name", r"\b(?:gr[ae]y[\s-]+eagle|global[\s-]+hawk|triton|reaper|stingray|switchblade)\b", "UAS", "extended"),
 ]
-_COMPILED = [(label, re.compile(rx, re.I), cat) for label, rx, cat in KEYWORDS]
+_COMPILED = [(label, re.compile(rx, re.I), cat, tier) for label, rx, cat, tier in KEYWORDS]
 
 
-def match_keywords(text: str) -> tuple[list[str], str | None]:
-    hits, cats = [], set()
-    for label, rx, cat in _COMPILED:
+def match_keywords(text: str) -> tuple[list[str], str | None, str | None]:
+    """Return (matched labels, category, tier). tier is "core" if any core keyword hit."""
+    hits, cats, tiers = [], set(), set()
+    for label, rx, cat, tier in _COMPILED:
         if rx.search(text or ""):
             hits.append(label)
             cats.add(cat)
+            tiers.add(tier)
     if not hits:
-        return [], None
-    return hits, ("C-UAS" if "C-UAS" in cats else "UAS")
+        return [], None, None
+    return hits, ("C-UAS" if "C-UAS" in cats else "UAS"), ("core" if "core" in tiers else "extended")
 
 
 # ---------------------------------------------------------------------------
@@ -195,11 +214,39 @@ def service_of(account_title: str) -> str:
     return "Unknown"
 
 
-def screen(path: pathlib.Path, source: dict) -> tuple[list[dict], list[dict]]:
+def load_overrides(path: pathlib.Path | None) -> dict:
+    """overrides.json: hand-reviewed decisions applied after the keyword screen.
+
+    {"exclude": [{"exhibit": "R-1", "pe_or_bli": "0604123A", "account": "2040A", "reason": "..."}],
+     "include": [{"exhibit": "P-1", "pe_or_bli": "1234", "category": "C-UAS", "reason": "..."}]}
+    "account" is optional; when given, the rule only applies to that appropriation code.
+    """
+    if not path or not path.exists():
+        return {"exclude": [], "include": []}
+    d = json.loads(path.read_text())
+    for k in ("exclude", "include"):
+        d.setdefault(k, [])
+        for r in d[k]:
+            if not r.get("exhibit") or not r.get("pe_or_bli") or not r.get("reason"):
+                raise ValueError(f"override needs exhibit, pe_or_bli and reason: {r}")
+    return d
+
+
+def _rule_for(rules: list[dict], exhibit: str, pe: str, account: str) -> dict | None:
+    for r in rules:
+        if r["exhibit"] == exhibit and r["pe_or_bli"] == pe and (not r.get("account") or r["account"] == account):
+            return r
+    return None
+
+
+def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
+    """Return (rows, unreadable, excluded) for one exhibit file."""
+    overrides = overrides or {"exclude": [], "include": []}
     rows = read_xlsx_rows(path)
     hi = find_header(rows)
     cols = map_columns(rows[hi])
-    out, unreadable = [], []
+    out, unreadable, excluded = [], [], []
+    exhibit = source.get("exhibit", "")
 
     def get(row, key):
         i = cols.get(key)
@@ -209,10 +256,19 @@ def screen(path: pathlib.Path, source: dict) -> tuple[list[dict], list[dict]]:
         title = get(row, "title")
         if not title:
             continue
-        text = title + " " + get(row, "description")
-        hits, category = match_keywords(text)
-        if not hits:
+        pe, account = get(row, "pe_or_bli"), get(row, "account")
+        hits, category, tier = match_keywords(title + " " + get(row, "description"))
+        inc = _rule_for(overrides["include"], exhibit, pe, account)
+        if not hits and not inc:
             continue
+        exc = _rule_for(overrides["exclude"], exhibit, pe, account)
+        rid = f"{source['id']}:r{n}"
+        if exc:
+            excluded.append({"id": rid, "pe_or_bli": pe, "title": title, "matched_keywords": hits,
+                             "reason": exc["reason"]})
+            continue
+        if inc and not hits:
+            category, tier = inc.get("category", "UAS"), "override"
         amounts, bad = {}, []
         for i, label in cols["amounts"]:
             v = row[i] if i < len(row) else None
@@ -224,27 +280,29 @@ def screen(path: pathlib.Path, source: dict) -> tuple[list[dict], list[dict]]:
                 bad.append({"column": label, "raw": str(v)})
         account_title = get(row, "account_title")
         rec = {
-            "id": f"{source['id']}:r{n}",
-            "exhibit": source.get("exhibit", ""),
+            "id": rid,
+            "exhibit": exhibit,
             "fiscal_year": source.get("fiscal_year"),
             "line_number": get(row, "line_number"),
-            "pe_or_bli": get(row, "pe_or_bli"),
+            "pe_or_bli": pe,
             "title": title,
             "service": service_of(account_title),
             "organization": get(row, "organization"),
-            "appropriation": " ".join(x for x in [get(row, "account"), account_title] if x),
+            "appropriation": " ".join(x for x in [account, account_title] if x),
             "budget_activity": " ".join(x for x in [get(row, "budget_activity"), get(row, "budget_activity_title")] if x),
             "classification": get(row, "classification"),
             "category": category,
+            "match_tier": tier,
             "matched_keywords": hits,
+            "override_reason": inc["reason"] if inc and not hits else None,
             "amounts_thousands": amounts,
             "source_url": source["url"],
             "source_row": n,
         }
         out.append(rec)
         for b in bad:
-            unreadable.append({"id": rec["id"], **b})
-    return out, unreadable
+            unreadable.append({"id": rid, **b})
+    return out, unreadable, excluded
 
 
 def sha256(path: pathlib.Path) -> str:
@@ -261,13 +319,18 @@ def fetch(url: str, dest: pathlib.Path) -> None:
 def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--sources", default=str(ROOT / "sources.json"))
-    ap.add_argument("--fetch", action="store_true", help="download every source in sources.json into raw/")
+    ap.add_argument("--fetch", action="store_true",
+                    help="download every source in sources.json to its 'local' path, then screen it")
+    ap.add_argument("--local", action="store_true",
+                    help="screen the already-downloaded files at each source's 'local' path")
     ap.add_argument("--input", action="append", default=[],
                     help="local .xlsx, optionally as PATH=SOURCE_ID to borrow that source's URL/exhibit")
     ap.add_argument("--source-url", help="source URL for a bare --input (required if no SOURCE_ID)")
     ap.add_argument("--exhibit", default="", help="exhibit label for a bare --input, e.g. R-1 or P-1")
     ap.add_argument("--fiscal-year", type=int)
     ap.add_argument("--status", default="live", help="dataset status written to the output (live|synthetic)")
+    ap.add_argument("--overrides", default=str(ROOT / "overrides.json"),
+                    help="hand-reviewed include/exclude rules (default: overrides.json)")
     ap.add_argument("--out", default=str(ROOT / "data" / "lines.json"))
     a = ap.parse_args(argv)
 
@@ -275,11 +338,16 @@ def main(argv=None) -> int:
     by_id = {s["id"]: s for s in cfg["sources"]}
     jobs: list[tuple[pathlib.Path, dict]] = []
 
-    if a.fetch:
+    if a.fetch or a.local:
         for s in cfg["sources"]:
-            dest = ROOT / "raw" / pathlib.Path(s["url"]).name.replace(".xlsx", f"-{s['id']}.xlsx")
-            print(f"fetching {s['url']}", file=sys.stderr)
-            fetch(s["url"], dest)
+            dest = ROOT / s["local"]
+            if a.fetch:
+                print(f"fetching {s['url']}", file=sys.stderr)
+                fetch(s["url"], dest)
+            elif not dest.exists():
+                ap.error(f"{dest} is missing: run with --fetch, or download {s['url']} there")
+            if s.get("sha256") and sha256(dest) != s["sha256"]:
+                ap.error(f"{dest} does not match the sha256 pinned in sources.json")
             jobs.append((dest, s))
     for spec in a.input:
         path, _, sid = spec.partition("=")
@@ -295,21 +363,27 @@ def main(argv=None) -> int:
     if not jobs:
         ap.error("nothing to do: pass --fetch or --input")
 
-    rows, unreadable, used = [], [], []
+    ov_path = pathlib.Path(a.overrides) if a.overrides else None
+    overrides = load_overrides(ov_path)
+    rows, unreadable, excluded, used = [], [], [], []
     for path, s in jobs:
-        r, u = screen(path, s)
+        r, u, x = screen(path, s, overrides)
         rows += r
         unreadable += u
+        excluded += x
         used.append({"id": s["id"], "exhibit": s.get("exhibit"), "fiscal_year": s.get("fiscal_year"),
-                     "url": s["url"], "sha256": sha256(path), "lines_matched": len(r)})
-        print(f"{s['id']}: {len(r)} matching lines", file=sys.stderr)
+                     "url": s["url"], "sha256": sha256(path), "lines_matched": len(r),
+                     "lines_excluded": len(x)})
+        print(f"{s['id']}: {len(r)} lines kept, {len(x)} excluded by overrides", file=sys.stderr)
 
     doc = {
         "status": a.status,
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
         "units": "thousands of US dollars, as printed in the exhibit",
-        "method": "case-insensitive keyword screen of line titles; see README",
-        "keywords": [{"label": l, "regex": rx, "category": c} for l, rx, c in KEYWORDS],
+        "method": "case-insensitive keyword screen of line titles, then hand-reviewed overrides; see README",
+        "keywords": [{"label": l, "regex": rx, "category": c, "tier": t} for l, rx, c, t in KEYWORDS],
+        "overrides_file": str(ov_path.relative_to(ROOT)) if ov_path and ov_path.exists() and ov_path.is_relative_to(ROOT) else None,
+        "excluded": excluded,
         "sources": used,
         "unreadable": unreadable,
         "rows": rows,
