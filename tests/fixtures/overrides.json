@@ -1,0 +1,19 @@
+{
+  "_comment": "SYNTHETIC overrides for the test fixtures.",
+  "include": [
+    {
+      "exhibit": "R-1",
+      "pe_or_bli": "TEST0002A",
+      "category": "C-UAS",
+      "reason": "test: radio line assumed to fund C-UAS sensors"
+    }
+  ],
+  "exclude": [
+    {
+      "exhibit": "R-1",
+      "pe_or_bli": "TEST0004F",
+      "account": "3600F",
+      "reason": "test: drone swarm line is a false hit"
+    }
+  ]
+}

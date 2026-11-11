@@ -1,0 +1,380 @@
+{
+ "status": "synthetic",
+ "generated_at": "2026-11-11T23:05:23+00:00",
+ "units": "thousands of US dollars, as printed in the exhibit",
+ "method": "case-insensitive keyword screen of line titles, then hand-reviewed overrides; see README",
+ "keywords": [
+  {
+   "label": "counter-UAS",
+   "regex": "\\bcounter[\\s-]*(?:small[\\s-]*)?(?:s?UAS|unmanned)",
+   "category": "C-UAS",
+   "tier": "core"
+  },
+  {
+   "label": "C-UAS",
+   "regex": "\\bC[\\s-]?s?UAS\\b",
+   "category": "C-UAS",
+   "tier": "core"
+  },
+  {
+   "label": "counter-small UAS",
+   "regex": "\\bcounter[\\s-]*small[\\s-]*(?:UAS|unmanned)",
+   "category": "C-UAS",
+   "tier": "core"
+  },
+  {
+   "label": "UAS",
+   "regex": "\\bs?UAS\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "unmanned aircraft",
+   "regex": "\\bunmanned[\\s-]+aircraft",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "drone",
+   "regex": "\\bdrones?\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "loitering munition",
+   "regex": "\\bloiter(?:ing)?[\\s-]+munitions?\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "Replicator",
+   "regex": "\\breplicator\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "counter (abbrev.)",
+   "regex": "\\b(?:ctr|cntr|counter)[\\s-]*(?:sm(?:all)?[\\s-]*)?(?:s?UAVs?\\b|unman)",
+   "category": "C-UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "UAV",
+   "regex": "\\bs?UAVs?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "unmanned aerial",
+   "regex": "\\bunmanned[\\s-]+aerial",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "unmanned air (abbrev.)",
+   "regex": "\\bunman(?:ned)?[\\s-]+air\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "uncrewed",
+   "regex": "\\buncrewed[\\s-]+(?:aircraft|aerial|air)\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "RPA",
+   "regex": "\\bRPAs?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "collaborative combat aircraft",
+   "regex": "\\bcollaborative[\\s-]+combat[\\s-]+aircraft",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "MQ-/RQ- designation",
+   "regex": "\\b[MR]Q[\\s-]?\\d{1,2}[A-Z]?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "platform name",
+   "regex": "\\b(?:gr[ae]y[\\s-]+eagle|global[\\s-]+hawk|triton|reaper|stingray|switchblade)\\b",
+   "category": "UAS",
+   "tier": "extended"
+  }
+ ],
+ "overrides_file": null,
+ "excluded": [
+  {
+   "id": "synthetic-r1:r7",
+   "exhibit": "R-1",
+   "pe_or_bli": "TEST0004F",
+   "title": "Synthetic Drone Swarm Experiment",
+   "matched_keywords": [
+    "drone"
+   ],
+   "reason": "test: drone swarm line is a false hit"
+  }
+ ],
+ "sources": [
+  {
+   "id": "synthetic-r1",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "url": "tests/fixtures/synthetic_r1.xlsx",
+   "url_status": null,
+   "sha256": "d87f4f96e95647ff9e7c5e839fde0a3d479d1cf9f28176955cab0aa8cd2e22b7",
+   "lines_matched": 5,
+   "lines_excluded": 1,
+   "total_row_check": {
+    "checked": false,
+    "reason": "no 'Total of Displayed Rows' row found"
+   }
+  },
+  {
+   "id": "synthetic-p1",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "url": "tests/fixtures/synthetic_p1.xlsx",
+   "url_status": null,
+   "sha256": "853771d31521b3b583049c3d473c89367627def31e8ef11a538dad1fc9003ba8",
+   "lines_matched": 2,
+   "lines_excluded": 0,
+   "total_row_check": {
+    "checked": false,
+    "reason": "no 'Total of Displayed Rows' row found"
+   }
+  }
+ ],
+ "unreadable": [],
+ "rows": [
+  {
+   "id": "synthetic-r1:r4",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "1",
+   "pe_or_bli": "TEST0001A",
+   "title": "Synthetic Counter-Small UAS Prototype",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test & Eval, Army",
+   "budget_activity": "04 Advanced Component Development & Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "counter-small UAS",
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 1000,
+    "FY 2025 Enacted": 2000,
+    "FY 2026 Disc Request": 3000,
+    "FY 2026 Reconciliation Request": 0,
+    "FY 2026 Total": 3000
+   },
+   "source_url": "tests/fixtures/synthetic_r1.xlsx",
+   "source_row": 4
+  },
+  {
+   "id": "synthetic-r1:r5",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "2",
+   "pe_or_bli": "TEST0002A",
+   "title": "Synthetic Tactical Radio",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test & Eval, Army",
+   "budget_activity": "05 System Development & Demonstration",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "test: radio line assumed to fund C-UAS sensors",
+   "amounts_thousands": {
+    "FY 2024 Actuals": 500,
+    "FY 2025 Enacted": 500,
+    "FY 2026 Disc Request": 500,
+    "FY 2026 Reconciliation Request": 0,
+    "FY 2026 Total": 500
+   },
+   "source_url": "tests/fixtures/synthetic_r1.xlsx",
+   "source_row": 5
+  },
+  {
+   "id": "synthetic-r1:r6",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "3",
+   "pe_or_bli": "TEST0003N",
+   "title": "Synthetic Unmanned Aircraft Systems",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test & Eval, Navy",
+   "budget_activity": "04 Advanced Component Development & Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "unmanned aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 4000,
+    "FY 2025 Enacted": 4500,
+    "FY 2026 Disc Request": 5000,
+    "FY 2026 Reconciliation Request": 1000,
+    "FY 2026 Total": 6000
+   },
+   "source_url": "tests/fixtures/synthetic_r1.xlsx",
+   "source_row": 6
+  },
+  {
+   "id": "synthetic-r1:r8",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "5",
+   "pe_or_bli": "TEST0005D",
+   "title": "Synthetic Replicator Initiative",
+   "service": "Defense-Wide",
+   "organization": "D",
+   "appropriation": "0400D Research, Development, Test & Eval, Defense-Wide",
+   "budget_activity": "03 Advanced Technology Development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "Replicator"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 7000,
+    "FY 2025 Enacted": 8000,
+    "FY 2026 Disc Request": 9000,
+    "FY 2026 Reconciliation Request": 0,
+    "FY 2026 Total": 9000
+   },
+   "source_url": "tests/fixtures/synthetic_r1.xlsx",
+   "source_row": 8
+  },
+  {
+   "id": "synthetic-r1:r10",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "7",
+   "pe_or_bli": "TEST0007F",
+   "title": "Synthetic MQ-9 UAV Upgrades",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test & Eval, Air Force",
+   "budget_activity": "07 Operational System Development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 600,
+    "FY 2025 Enacted": 700,
+    "FY 2026 Disc Request": 800,
+    "FY 2026 Reconciliation Request": 0,
+    "FY 2026 Total": 800
+   },
+   "source_url": "tests/fixtures/synthetic_r1.xlsx",
+   "source_row": 10
+  },
+  {
+   "id": "synthetic-p1:r4",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "10",
+   "pe_or_bli": "TEST1001A",
+   "title": "Synthetic C-sUAS Interceptors",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2035A Other Procurement, Army",
+   "budget_activity": "02 Communications and Electronics Equipment",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "C-UAS",
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 1200,
+    "FY 2025 Enacted": 1300,
+    "FY 2026 Disc Request": 1400,
+    "FY 2026 Total": 1400
+   },
+   "source_url": "tests/fixtures/synthetic_p1.xlsx",
+   "source_row": 4
+  },
+  {
+   "id": "synthetic-p1:r5",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "11",
+   "pe_or_bli": "TEST1002N",
+   "title": "Synthetic Loitering Munitions, Marine Corps",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1508N Procurement of Ammo, Navy & Marine Corps",
+   "budget_activity": "01 Proc Ammo, Navy",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "loitering munition"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 300,
+    "FY 2025 Enacted": 350,
+    "FY 2026 Disc Request": 400,
+    "FY 2026 Total": 400
+   },
+   "source_url": "tests/fixtures/synthetic_p1.xlsx",
+   "source_row": 5
+  }
+ ]
+}

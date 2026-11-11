@@ -1,0 +1,2373 @@
+{
+ "status": "live",
+ "generated_at": "2026-11-11T23:04:44+00:00",
+ "units": "thousands of US dollars, as printed in the exhibit",
+ "method": "case-insensitive keyword screen of line titles, then hand-reviewed overrides; see README",
+ "keywords": [
+  {
+   "label": "counter-UAS",
+   "regex": "\\bcounter[\\s-]*(?:small[\\s-]*)?(?:s?UAS|unmanned)",
+   "category": "C-UAS",
+   "tier": "core"
+  },
+  {
+   "label": "C-UAS",
+   "regex": "\\bC[\\s-]?s?UAS\\b",
+   "category": "C-UAS",
+   "tier": "core"
+  },
+  {
+   "label": "counter-small UAS",
+   "regex": "\\bcounter[\\s-]*small[\\s-]*(?:UAS|unmanned)",
+   "category": "C-UAS",
+   "tier": "core"
+  },
+  {
+   "label": "UAS",
+   "regex": "\\bs?UAS\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "unmanned aircraft",
+   "regex": "\\bunmanned[\\s-]+aircraft",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "drone",
+   "regex": "\\bdrones?\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "loitering munition",
+   "regex": "\\bloiter(?:ing)?[\\s-]+munitions?\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "Replicator",
+   "regex": "\\breplicator\\b",
+   "category": "UAS",
+   "tier": "core"
+  },
+  {
+   "label": "counter (abbrev.)",
+   "regex": "\\b(?:ctr|cntr|counter)[\\s-]*(?:sm(?:all)?[\\s-]*)?(?:s?UAVs?\\b|unman)",
+   "category": "C-UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "UAV",
+   "regex": "\\bs?UAVs?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "unmanned aerial",
+   "regex": "\\bunmanned[\\s-]+aerial",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "unmanned air (abbrev.)",
+   "regex": "\\bunman(?:ned)?[\\s-]+air\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "uncrewed",
+   "regex": "\\buncrewed[\\s-]+(?:aircraft|aerial|air)\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "RPA",
+   "regex": "\\bRPAs?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "collaborative combat aircraft",
+   "regex": "\\bcollaborative[\\s-]+combat[\\s-]+aircraft",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "MQ-/RQ- designation",
+   "regex": "\\b[MR]Q[\\s-]?\\d{1,2}[A-Z]?\\b",
+   "category": "UAS",
+   "tier": "extended"
+  },
+  {
+   "label": "platform name",
+   "regex": "\\b(?:gr[ae]y[\\s-]+eagle|global[\\s-]+hawk|triton|reaper|stingray|switchblade)\\b",
+   "category": "UAS",
+   "tier": "extended"
+  }
+ ],
+ "overrides_file": "overrides.json",
+ "excluded": [
+  {
+   "id": "fy2026-p1:r860",
+   "exhibit": "P-1",
+   "pe_or_bli": "10TRGT",
+   "title": "Target Drones",
+   "matched_keywords": [
+    "drone"
+   ],
+   "reason": "'Target Drones' are aerial targets for test and training, not operational UAS. Excluded for consistency with the 'Aerial Targets' lines (Navy P-1 2280, AF R-1 0305116F), which also aren't counted."
+  }
+ ],
+ "sources": [
+  {
+   "id": "fy2026-p1",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "url_status": "Expected Comptroller path (listed for the FY2026 folder in search results). Copy downloaded manually by Nat in a browser on 2026-11-11; exact click-through URL not captured.",
+   "sha256": "4d965906ad91aa8b7d6d5f891a0717ac25ace6c18f3d50df07ebde611774a9c0",
+   "lines_matched": 36,
+   "lines_excluded": 1,
+   "total_row_check": {
+    "checked": true,
+    "columns": [
+     {
+      "column": "FY 2024 Actuals",
+      "total_thousands": 219737272
+     },
+     {
+      "column": "FY 2025 Enacted",
+      "total_thousands": 187066754
+     },
+     {
+      "column": "FY 2026 Disc Request",
+      "total_thousands": 166065731
+     },
+     {
+      "column": "FY 2026 Reconciliation Request",
+      "total_thousands": 55237208
+     },
+     {
+      "column": "FY 2026 Total",
+      "total_thousands": 221302939
+     }
+    ]
+   }
+  },
+  {
+   "id": "fy2026-r1",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "url_status": "Path inferred from the P-1 filename. Copy downloaded manually by Nat in a browser on 2026-11-11; exact click-through URL not captured.",
+   "sha256": "671c8e816b9abc666754982b25a15bc6a89e22926e21dd322b6be106dc83cc2e",
+   "lines_matched": 35,
+   "lines_excluded": 0,
+   "total_row_check": {
+    "checked": true,
+    "columns": [
+     {
+      "column": "FY 2024 Actuals",
+      "total_thousands": 153411603
+     },
+     {
+      "column": "FY 2025 Enacted",
+      "total_thousands": 143693659
+     },
+     {
+      "column": "FY 2025 Supplemental",
+      "total_thousands": 110678
+     },
+     {
+      "column": "FY 2025 Total",
+      "total_thousands": 143804337
+     },
+     {
+      "column": "FY 2026 Disc Request",
+      "total_thousands": 143188484
+     },
+     {
+      "column": "FY 2026 Reconciliation Request",
+      "total_thousands": 37068954
+     },
+     {
+      "column": "FY 2026 Total",
+      "total_thousands": 180257438
+     }
+    ]
+   }
+  }
+ ],
+ "unreadable": [],
+ "rows": [
+  {
+   "id": "fy2026-p1:r3",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "2",
+   "pe_or_bli": "9670A00005",
+   "title": "MQ-1 UAV",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "01 Aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2025 Enacted": 240000
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 3
+  },
+  {
+   "id": "fy2026-p1:r4",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "3",
+   "pe_or_bli": "9672A00510",
+   "title": "Future UAS Family",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "01 Aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2025 Enacted": 143182
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 4
+  },
+  {
+   "id": "fy2026-p1:r5",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "5",
+   "pe_or_bli": "9678A12500",
+   "title": "SMALL UNMANNED AIRCRAFT SYSTEMS",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "01 Aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "unmanned aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 49969,
+    "FY 2025 Enacted": 43514
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 5
+  },
+  {
+   "id": "fy2026-p1:r23",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "20",
+   "pe_or_bli": "9990A19900",
+   "title": "Spectrum Army SUAS",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "01 Aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 1741
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 23
+  },
+  {
+   "id": "fy2026-p1:r24",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "23",
+   "pe_or_bli": "0023A01001",
+   "title": "MQ-1 PAYLOAD",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "02 Modification of aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 13650,
+    "FY 2025 Enacted": 14086
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 24
+  },
+  {
+   "id": "fy2026-p1:r25",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "25",
+   "pe_or_bli": "0756AA6601",
+   "title": "Gray Eagle Mods2",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "02 Modification of aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 82959,
+    "FY 2025 Enacted": 23865
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 25
+  },
+  {
+   "id": "fy2026-p1:r35",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "42",
+   "pe_or_bli": "9556A01002",
+   "title": "UAS MODS",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "02 Modification of aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 2258,
+    "FY 2025 Enacted": 2265
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 35
+  },
+  {
+   "id": "fy2026-p1:r46",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "57",
+   "pe_or_bli": "7000I47000",
+   "title": "SMALL UNMANNED AERIAL SYSTEMS",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "06 AGILE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 726034,
+    "FY 2026 Total": 726034
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 46
+  },
+  {
+   "id": "fy2026-p1:r47",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "58",
+   "pe_or_bli": "8000I48000",
+   "title": "FUTURE UNMANNED AERIAL SYSTEMS (UAS) FAMILY",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "06 AGILE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 118459,
+    "FY 2026 Total": 118459
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 47
+  },
+  {
+   "id": "fy2026-p1:r48",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "59",
+   "pe_or_bli": "9000I49000",
+   "title": "GRAY EAGLE MODIFICATIONS",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2031A Aircraft Procurement, Army",
+   "budget_activity": "06 AGILE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 12351,
+    "FY 2026 Total": 12351
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 48
+  },
+  {
+   "id": "fy2026-p1:r60",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "13",
+   "pe_or_bli": "9216C82200",
+   "title": "COUNTER SMALL UNMANNED AERIAL SYSTEM INTERCEP",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2032A Missile Procurement, Army",
+   "budget_activity": "02 Other missiles",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "counter-small UAS",
+    "counter (abbrev.)",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2025 Enacted": 302261
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 60
+  },
+  {
+   "id": "fy2026-p1:r77",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "26",
+   "pe_or_bli": "6872C91500",
+   "title": "FAMILY OF LOW ALTITUDE UNMANNED SYSTEMS",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2032A Missile Procurement, Army",
+   "budget_activity": "02 Other missiles",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "Title 'Family of Low Altitude Unmanned Systems' names low-altitude (air) unmanned systems. Not yet checked against the P-40 narrative.",
+   "amounts_thousands": {
+    "FY 2025 Enacted": 120599
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 77
+  },
+  {
+   "id": "fy2026-p1:r85",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "44",
+   "pe_or_bli": "6000I46000",
+   "title": "LAUNCHED EFFECTS FAMILY",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2032A Missile Procurement, Army",
+   "budget_activity": "06 AGILE PROFILE MANAGEMENT",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "Launched Effects are air-launched small UAS; matches R-1 PEs 0602345A/0603345A/0609345A, which are titled 'Unmanned Aerial Systems Launched Effects'.",
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 67816,
+    "FY 2026 Reconciliation Request": 12587,
+    "FY 2026 Total": 80403
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 85
+  },
+  {
+   "id": "fy2026-p1:r229",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "105",
+   "pe_or_bli": "0219AD0500",
+   "title": "COUNTER SMALL UNMANNED AERIAL SYSTEM (C-SUAS)",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2035A Other Procurement, Army",
+   "budget_activity": "02 Communications and electronics equipment",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "C-UAS",
+    "counter-small UAS",
+    "UAS",
+    "counter (abbrev.)",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 628062,
+    "FY 2025 Enacted": 288386
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 229
+  },
+  {
+   "id": "fy2026-p1:r299",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "207",
+   "pe_or_bli": "0010I24000",
+   "title": "COUNTER-SMALL UNMANNED AERIAL SYSTEM (C-SUAS)",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2035A Other Procurement, Army",
+   "budget_activity": "06 AGILE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "C-UAS",
+    "counter-small UAS",
+    "UAS",
+    "counter (abbrev.)",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 306568,
+    "FY 2026 Reconciliation Request": 386800,
+    "FY 2026 Total": 693368
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 299
+  },
+  {
+   "id": "fy2026-p1:r340",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "27",
+   "pe_or_bli": "0442",
+   "title": "MQ-4 Triton",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation",
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 476345,
+    "FY 2025 Enacted": 159226,
+    "FY 2026 Disc Request": 133139,
+    "FY 2026 Total": 133139
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 340
+  },
+  {
+   "id": "fy2026-p1:r341",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "27",
+   "pe_or_bli": "0442",
+   "title": "MQ-4 Triton",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Less: Advance Procurement (PY)",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation",
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": -60335
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 341
+  },
+  {
+   "id": "fy2026-p1:r342",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "29",
+   "pe_or_bli": "0443",
+   "title": "MQ-8 UAV",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 1546
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 342
+  },
+  {
+   "id": "fy2026-p1:r343",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "31",
+   "pe_or_bli": "0449",
+   "title": "MQ-25",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 50016,
+    "FY 2025 Enacted": 61979,
+    "FY 2026 Disc Request": 407046,
+    "FY 2026 Reconciliation Request": 100000,
+    "FY 2026 Total": 507046
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 343
+  },
+  {
+   "id": "fy2026-p1:r344",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "31",
+   "pe_or_bli": "0449",
+   "title": "MQ-25",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Less: Advance Procurement (PY)",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": -50016,
+    "FY 2025 Enacted": -11979
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 344
+  },
+  {
+   "id": "fy2026-p1:r345",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "32",
+   "pe_or_bli": "0449",
+   "title": "MQ-25",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Advance Procurement (CY)",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 11979,
+    "FY 2026 Disc Request": 52191,
+    "FY 2026 Total": 52191
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 345
+  },
+  {
+   "id": "fy2026-p1:r346",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "32",
+   "pe_or_bli": "0449",
+   "title": "MQ-25",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "C (FY 2024 for FY 2025) (M)",
+   "add_non_add": "Non-Add",
+   "include_in_toa": "",
+   "counts_in_total": false,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 11979
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 346
+  },
+  {
+   "id": "fy2026-p1:r347",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "32",
+   "pe_or_bli": "0449",
+   "title": "MQ-25",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "C (FY 2026 for FY 2027) (M)",
+   "add_non_add": "Non-Add",
+   "include_in_toa": "",
+   "counts_in_total": false,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 52191,
+    "FY 2026 Total": 52191
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 347
+  },
+  {
+   "id": "fy2026-p1:r348",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "34",
+   "pe_or_bli": "0452",
+   "title": "Marine Group 5 UAS",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 86063,
+    "FY 2025 Enacted": 19081,
+    "FY 2026 Disc Request": 15162,
+    "FY 2026 Total": 15162
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 348
+  },
+  {
+   "id": "fy2026-p1:r352",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "41",
+   "pe_or_bli": "0507",
+   "title": "Marine Group 5 UAS Series",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "05 Modification of aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 93063,
+    "FY 2025 Enacted": 112672,
+    "FY 2026 Disc Request": 143695,
+    "FY 2026 Total": 143695
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 352
+  },
+  {
+   "id": "fy2026-p1:r379",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "70",
+   "pe_or_bli": "0588",
+   "title": "MQ-8 Series",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "05 Modification of aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 4514
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 379
+  },
+  {
+   "id": "fy2026-p1:r385",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "76",
+   "pe_or_bli": "0596",
+   "title": "MQ-4 Series",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1506N Aircraft Procurement, Navy",
+   "budget_activity": "05 Modification of aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 67284,
+    "FY 2025 Enacted": 79954,
+    "FY 2026 Disc Request": 180463,
+    "FY 2026 Total": 180463
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 385
+  },
+  {
+   "id": "fy2026-p1:r467",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "16",
+   "pe_or_bli": "1776",
+   "title": "Expeditionary Loitering Munitions",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1508N Procurement of Ammunition, Navy and Marine Corps",
+   "budget_activity": "01 Procurement of Ammunition, Navy",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "loitering munition"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 249575,
+    "FY 2025 Enacted": 588005,
+    "FY 2026 Reconciliation Request": 125000,
+    "FY 2026 Total": 125000
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 467
+  },
+  {
+   "id": "fy2026-p1:r711",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "102",
+   "pe_or_bli": "2S60",
+   "title": "DON UAS Video 5 (Afloat)",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1810N Other Procurement, Navy",
+   "budget_activity": "02 Communications and electronics equipment",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 1857
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 711
+  },
+  {
+   "id": "fy2026-p1:r805",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "34",
+   "pe_or_bli": "4757",
+   "title": "Unmanned Air Systems (Intel)",
+   "service": "Marine Corps",
+   "organization": "N",
+   "appropriation": "1109N Procurement, Marine Corps",
+   "budget_activity": "04 Communications and electronics equipment",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned air (abbrev.)"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 46951,
+    "FY 2025 Enacted": 50593,
+    "FY 2026 Disc Request": 14991,
+    "FY 2026 Total": 14991
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 805
+  },
+  {
+   "id": "fy2026-p1:r807",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "36",
+   "pe_or_bli": "4787",
+   "title": "UAS Payloads",
+   "service": "Marine Corps",
+   "organization": "N",
+   "appropriation": "1109N Procurement, Marine Corps",
+   "budget_activity": "04 Communications and electronics equipment",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 19088,
+    "FY 2025 Enacted": 12225,
+    "FY 2026 Disc Request": 12232,
+    "FY 2026 Total": 12232
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 807
+  },
+  {
+   "id": "fy2026-p1:r867",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "34",
+   "pe_or_bli": "Q020BR",
+   "title": "RQ-20B Puma",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3010F Aircraft Procurement, Air Force",
+   "budget_activity": "04 Other aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2025 Enacted": 11283,
+    "FY 2026 Disc Request": 11437,
+    "FY 2026 Total": 11437
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 867
+  },
+  {
+   "id": "fy2026-p1:r872",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "41",
+   "pe_or_bli": "CCA00M",
+   "title": "Collaborative Combat Aircraft Mods",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3010F Aircraft Procurement, Air Force",
+   "budget_activity": "05 Modification of inservice aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "collaborative combat aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 15048,
+    "FY 2026 Total": 15048
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 872
+  },
+  {
+   "id": "fy2026-p1:r911",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "88",
+   "pe_or_bli": "PRDTB2",
+   "title": "MQ-9 Mods",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3010F Aircraft Procurement, Air Force",
+   "budget_activity": "05 Modification of inservice aircraft",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 107643,
+    "FY 2025 Enacted": 12351,
+    "FY 2026 Disc Request": 100923,
+    "FY 2026 Total": 100923
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 911
+  },
+  {
+   "id": "fy2026-p1:r1140",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "96",
+   "pe_or_bli": "0201UMNISR",
+   "title": "Unmanned ISR",
+   "service": "Defense-Wide",
+   "organization": "SOCOM",
+   "appropriation": "0300D Procurement, Defense-Wide",
+   "budget_activity": "02 Special Operations Command",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "SOCOM 'Unmanned ISR'. Treated as aerial UAS from the title alone. Not yet checked against the J-book; it may include non-air systems.",
+   "amounts_thousands": {
+    "FY 2024 Actuals": 29497,
+    "FY 2025 Enacted": 33917,
+    "FY 2026 Disc Request": 6858,
+    "FY 2026 Total": 6858
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 1140
+  },
+  {
+   "id": "fy2026-p1:r1145",
+   "exhibit": "P-1",
+   "fiscal_year": 2026,
+   "line_number": "101",
+   "pe_or_bli": "1108MQ9",
+   "title": "MQ-9 Unmanned Aerial Vehicle",
+   "service": "Defense-Wide",
+   "organization": "SOCOM",
+   "appropriation": "0300D Procurement, Defense-Wide",
+   "budget_activity": "02 Special Operations Command",
+   "classification": "U",
+   "cost_type": "Weapon System Cost",
+   "add_non_add": "Add",
+   "include_in_toa": "",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 17684,
+    "FY 2025 Enacted": 13543,
+    "FY 2026 Disc Request": 12890,
+    "FY 2026 Reconciliation Request": 11990,
+    "FY 2026 Total": 24880
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+   "source_row": 1145
+  },
+  {
+   "id": "fy2026-r1:r11",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "9",
+   "pe_or_bli": "0602135A",
+   "title": "Counter Small Unmanned Aerial Systems (C-SUAS) Applied Research",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "02 Applied Research",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "C-UAS",
+    "counter-small UAS",
+    "UAS",
+    "counter (abbrev.)",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 12618,
+    "FY 2026 Total": 12618
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 11
+  },
+  {
+   "id": "fy2026-r1:r29",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "27",
+   "pe_or_bli": "0602345A",
+   "title": "Unmanned Aerial Systems Launched Effects Applied Research",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "02 Applied Research",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 18408,
+    "FY 2026 Total": 18408
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 29
+  },
+  {
+   "id": "fy2026-r1:r47",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "45",
+   "pe_or_bli": "0603135A",
+   "title": "Counter Small Unmanned Aerial Systems (C-SUAS) Advanced Technology",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "03 Advanced technology development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "C-UAS",
+    "counter-small UAS",
+    "UAS",
+    "counter (abbrev.)",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 7773,
+    "FY 2026 Total": 7773
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 47
+  },
+  {
+   "id": "fy2026-r1:r50",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "48",
+   "pe_or_bli": "0603345A",
+   "title": "Unmanned Aerial Systems Launched Effects Advanced Technology Development",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "03 Advanced technology development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 13898,
+    "FY 2026 Total": 13898
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 50
+  },
+  {
+   "id": "fy2026-r1:r83",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "82",
+   "pe_or_bli": "0604101A",
+   "title": "Small Unmanned Aerial Vehicle (SUAV) (6.4)",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 4956,
+    "FY 2025 Enacted": 1800,
+    "FY 2025 Total": 1800
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 83
+  },
+  {
+   "id": "fy2026-r1:r85",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "84",
+   "pe_or_bli": "0604113A",
+   "title": "Future Tactical Unmanned Aircraft System (FTUAS)",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "unmanned aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 67143,
+    "FY 2025 Enacted": 127870,
+    "FY 2025 Total": 127870
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 85
+  },
+  {
+   "id": "fy2026-r1:r97",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "97",
+   "pe_or_bli": "0604531A",
+   "title": "Counter - Small Unmanned Aircraft Systems Advanced Development",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "counter-small UAS",
+    "unmanned aircraft",
+    "counter (abbrev.)"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 54854,
+    "FY 2025 Enacted": 79983,
+    "FY 2025 Total": 79983,
+    "FY 2026 Disc Request": 45281,
+    "FY 2026 Total": 45281
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 97
+  },
+  {
+   "id": "fy2026-r1:r149",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "149",
+   "pe_or_bli": "0605205A",
+   "title": "Small Unmanned Aerial Vehicle (SUAV) (6.5)",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "05 System development and demonstration",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 20865,
+    "FY 2025 Enacted": 24474,
+    "FY 2025 Total": 24474
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 149
+  },
+  {
+   "id": "fy2026-r1:r164",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "164",
+   "pe_or_bli": "0605531A",
+   "title": "Counter - Small Unmanned Aircraft Systems Sys Dev & Demonstration",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "05 System development and demonstration",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "counter-small UAS",
+    "unmanned aircraft",
+    "counter (abbrev.)"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 34701,
+    "FY 2025 Enacted": 59563,
+    "FY 2025 Total": 59563,
+    "FY 2026 Disc Request": 55196,
+    "FY 2026 Total": 55196
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 164
+  },
+  {
+   "id": "fy2026-r1:r207",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "207",
+   "pe_or_bli": "0607143A",
+   "title": "Unmanned Aircraft System Universal Products",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "unmanned aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 24466,
+    "FY 2025 Enacted": 24539,
+    "FY 2025 Total": 24539
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 207
+  },
+  {
+   "id": "fy2026-r1:r231",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "236",
+   "pe_or_bli": "0305219A",
+   "title": "MQ-1 Gray Eagle UAV",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation",
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 6629,
+    "FY 2025 Enacted": 6681,
+    "FY 2025 Total": 6681,
+    "FY 2026 Disc Request": 3444,
+    "FY 2026 Total": 3444
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 231
+  },
+  {
+   "id": "fy2026-r1:r235",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "239",
+   "pe_or_bli": "0609135A",
+   "title": "Counter Unmanned Aerial Systems (UAS) Agile Development",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "09 AGILE RDTE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "UAS",
+    "counter (abbrev.)",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 143618,
+    "FY 2026 Total": 143618
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 235
+  },
+  {
+   "id": "fy2026-r1:r238",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "242",
+   "pe_or_bli": "0609345A",
+   "title": "Unmanned Aerial Systems Launched Effects Agile Systems Development",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "09 AGILE RDTE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 187473,
+    "FY 2026 Total": 187473
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 238
+  },
+  {
+   "id": "fy2026-r1:r239",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "243",
+   "pe_or_bli": "0609346A",
+   "title": "UAS Launched Effects Agile Development",
+   "service": "Army",
+   "organization": "A",
+   "appropriation": "2040A Research, Development, Test and Evaluation, Army",
+   "budget_activity": "09 AGILE RDTE PORTFOLIO MANAGEMENT",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 172898,
+    "FY 2026 Total": 172898
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 239
+  },
+  {
+   "id": "fy2026-r1:r268",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "27",
+   "pe_or_bli": "0603128N",
+   "title": "Unmanned Aerial System",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 98807,
+    "FY 2025 Enacted": 78175,
+    "FY 2025 Total": 78175,
+    "FY 2026 Disc Request": 28388,
+    "FY 2026 Total": 28388
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 268
+  },
+  {
+   "id": "fy2026-r1:r333",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "92",
+   "pe_or_bli": "0604636N",
+   "title": "Counter Unmanned Aircraft Systems (C-UAS)",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "C-UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "counter-UAS",
+    "C-UAS",
+    "UAS",
+    "unmanned aircraft",
+    "counter (abbrev.)"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 23661,
+    "FY 2025 Enacted": 14185,
+    "FY 2025 Total": 14185,
+    "FY 2026 Disc Request": 16689,
+    "FY 2026 Reconciliation Request": 6500,
+    "FY 2026 Total": 23189
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 333
+  },
+  {
+   "id": "fy2026-r1:r343",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "102",
+   "pe_or_bli": "0207147M",
+   "title": "Collaborative Combat Aircraft",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "collaborative combat aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 58000,
+    "FY 2026 Total": 58000
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 343
+  },
+  {
+   "id": "fy2026-r1:r346",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "105",
+   "pe_or_bli": "0304240M",
+   "title": "Advanced Tactical Unmanned Aircraft System",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "04 Advanced Component Development and Prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "unmanned aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 10539,
+    "FY 2025 Enacted": 3504,
+    "FY 2025 Total": 3504,
+    "FY 2026 Disc Request": 2822,
+    "FY 2026 Total": 2822
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 346
+  },
+  {
+   "id": "fy2026-r1:r411",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "170",
+   "pe_or_bli": "0605414N",
+   "title": "Unmanned Carrier Aviation (UCA)",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "05 System development and demonstration",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "Unmanned Carrier Aviation (UCA) is the carrier-based unmanned aircraft program (MQ-25 RDT&E); the MQ-25 P-1 line is already a keyword hit.",
+   "amounts_thousands": {
+    "FY 2024 Actuals": 275329,
+    "FY 2025 Enacted": 255031,
+    "FY 2025 Total": 255031,
+    "FY 2026 Disc Request": 305487,
+    "FY 2026 Total": 305487
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 411
+  },
+  {
+   "id": "fy2026-r1:r482",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "245",
+   "pe_or_bli": "0305204N",
+   "title": "Tactical Unmanned Aerial Vehicles",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 7518
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 482
+  },
+  {
+   "id": "fy2026-r1:r483",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "246",
+   "pe_or_bli": "0305205N",
+   "title": "UAS Integration and Interoperability",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 12738
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 483
+  },
+  {
+   "id": "fy2026-r1:r485",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "248",
+   "pe_or_bli": "0305220N",
+   "title": "MQ-4C Triton",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation",
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 12094,
+    "FY 2025 Enacted": 14402,
+    "FY 2025 Total": 14402,
+    "FY 2026 Disc Request": 14421,
+    "FY 2026 Total": 14421
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 485
+  },
+  {
+   "id": "fy2026-r1:r486",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "249",
+   "pe_or_bli": "0305231N",
+   "title": "MQ-8 UAV",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 15116
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 486
+  },
+  {
+   "id": "fy2026-r1:r487",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "250",
+   "pe_or_bli": "0305232M",
+   "title": "RQ-11 UAV",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 2107,
+    "FY 2025 Enacted": 2016,
+    "FY 2025 Total": 2016,
+    "FY 2026 Disc Request": 1063,
+    "FY 2026 Total": 1063
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 487
+  },
+  {
+   "id": "fy2026-r1:r488",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "251",
+   "pe_or_bli": "0305234N",
+   "title": "Small (Level 0) Tactical UAS (STUASL0)",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 2999
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 488
+  },
+  {
+   "id": "fy2026-r1:r490",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "253",
+   "pe_or_bli": "0305242M",
+   "title": "Unmanned Aerial Systems (UAS) Payloads (MIP)",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS",
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 12505,
+    "FY 2025 Enacted": 10917,
+    "FY 2025 Total": 10917,
+    "FY 2026 Disc Request": 9157,
+    "FY 2026 Total": 9157
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 490
+  },
+  {
+   "id": "fy2026-r1:r492",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "255",
+   "pe_or_bli": "0305421N",
+   "title": "MQ-4C Triton Modernization",
+   "service": "Navy",
+   "organization": "N",
+   "appropriation": "1319N Research, Development, Test and Evaluation, Navy",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "MQ-/RQ- designation",
+    "platform name"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 217978,
+    "FY 2025 Enacted": 444042,
+    "FY 2025 Total": 444042,
+    "FY 2026 Disc Request": 361943,
+    "FY 2026 Total": 361943
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 492
+  },
+  {
+   "id": "fy2026-r1:r566",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "66",
+   "pe_or_bli": "0207147F",
+   "title": "Collaborative Combat Aircraft",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test and Evaluation, Air Force",
+   "budget_activity": "04 Advanced component development and prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "collaborative combat aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2025 Enacted": 711747,
+    "FY 2025 Total": 711747,
+    "FY 2026 Disc Request": 111365,
+    "FY 2026 Reconciliation Request": 678000,
+    "FY 2026 Total": 789365
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 566
+  },
+  {
+   "id": "fy2026-r1:r567",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "67",
+   "pe_or_bli": "0207179F",
+   "title": "Autonomous Collaborative Platforms",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test and Evaluation, Air Force",
+   "budget_activity": "04 Advanced component development and prototypes",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "Autonomous Collaborative Platforms are uncrewed aircraft in the same family as the CCA lines already kept.",
+   "amounts_thousands": {
+    "FY 2024 Actuals": 110945,
+    "FY 2025 Enacted": 50666,
+    "FY 2025 Total": 50666,
+    "FY 2026 Disc Request": 62019,
+    "FY 2026 Total": 62019
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 567
+  },
+  {
+   "id": "fy2026-r1:r618",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "118",
+   "pe_or_bli": "0305205F",
+   "title": "Endurance Unmanned Aerial Vehicles",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test and Evaluation, Air Force",
+   "budget_activity": "05 System development and demonstration",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "unmanned aerial"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 30000
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 618
+  },
+  {
+   "id": "fy2026-r1:r642",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "142",
+   "pe_or_bli": "0208201F",
+   "title": "Offensive small Unmanned Aircraft Systems (sUAS)",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test and Evaluation, Air Force",
+   "budget_activity": "06 Management support",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "core",
+   "matched_keywords": [
+    "UAS",
+    "unmanned aircraft"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2026 Disc Request": 4985,
+    "FY 2026 Total": 4985
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 642
+  },
+  {
+   "id": "fy2026-r1:r672",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "173",
+   "pe_or_bli": "0205219F",
+   "title": "MQ-9 UAV",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test and Evaluation, Air Force",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 82393,
+    "FY 2025 Enacted": 7074,
+    "FY 2025 Total": 7074,
+    "FY 2026 Disc Request": 26689,
+    "FY 2026 Total": 26689
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 672
+  },
+  {
+   "id": "fy2026-r1:r747",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "264",
+   "pe_or_bli": "0305220F",
+   "title": "RQ-4 UAV",
+   "service": "Air Force",
+   "organization": "F",
+   "appropriation": "3600F Research, Development, Test and Evaluation, Air Force",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 1242,
+    "FY 2025 Enacted": 6171,
+    "FY 2025 Total": 6171
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 747
+  },
+  {
+   "id": "fy2026-r1:r1110",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "287",
+   "pe_or_bli": "1105219BB",
+   "title": "MQ-9 UAV",
+   "service": "Defense-Wide",
+   "organization": "SOCOM",
+   "appropriation": "0400D Research, Development, Test and Evaluation, Defense-Wide",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "extended",
+   "matched_keywords": [
+    "UAV",
+    "MQ-/RQ- designation"
+   ],
+   "override_reason": null,
+   "amounts_thousands": {
+    "FY 2024 Actuals": 90831,
+    "FY 2025 Enacted": 34851,
+    "FY 2025 Total": 34851
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 1110
+  },
+  {
+   "id": "fy2026-r1:r1117",
+   "exhibit": "R-1",
+   "fiscal_year": 2026,
+   "line_number": "294",
+   "pe_or_bli": "1160434BB",
+   "title": "Unmanned ISR",
+   "service": "Defense-Wide",
+   "organization": "SOCOM",
+   "appropriation": "0400D Research, Development, Test and Evaluation, Defense-Wide",
+   "budget_activity": "07 Operational system development",
+   "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "Y",
+   "counts_in_total": true,
+   "category": "UAS",
+   "match_tier": "override",
+   "matched_keywords": [],
+   "override_reason": "SOCOM 'Unmanned ISR' RDT&E, the counterpart of P-1 0201UMNISR. Same caveat: from the title only.",
+   "amounts_thousands": {
+    "FY 2024 Actuals": 6727,
+    "FY 2025 Enacted": 31578,
+    "FY 2025 Total": 31578,
+    "FY 2026 Disc Request": 2281,
+    "FY 2026 Total": 2281
+   },
+   "source_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+   "source_row": 1117
+  }
+ ]
+}
