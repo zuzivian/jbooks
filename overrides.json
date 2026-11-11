@@ -1,5 +1,63 @@
 {
   "_comment": "Hand-reviewed decisions applied after the keyword screen. Every rule needs exhibit, pe_or_bli and reason; 'account' (appropriation code) is optional and narrows the rule. 'include' adds a line no keyword caught; 'exclude' drops a false hit. Excluded lines are listed in data/lines.json under 'excluded' so nothing disappears silently.",
-  "include": [],
-  "exclude": []
+  "include": [
+    {
+      "exhibit": "P-1",
+      "pe_or_bli": "6000I46000",
+      "category": "UAS",
+      "reason": "Launched Effects are air-launched small UAS; matches R-1 PEs 0602345A/0603345A/0609345A, which are titled 'Unmanned Aerial Systems Launched Effects'."
+    },
+    {
+      "exhibit": "P-1",
+      "pe_or_bli": "6872C91500",
+      "category": "UAS",
+      "reason": "Title 'Family of Low Altitude Unmanned Systems' names low-altitude (air) unmanned systems. Not yet checked against the P-40 narrative."
+    },
+    {
+      "exhibit": "R-1",
+      "pe_or_bli": "0605414N",
+      "category": "UAS",
+      "reason": "Unmanned Carrier Aviation (UCA) is the carrier-based unmanned aircraft program (MQ-25 RDT&E); the MQ-25 P-1 line is already a keyword hit."
+    },
+    {
+      "exhibit": "R-1",
+      "pe_or_bli": "0207179F",
+      "category": "UAS",
+      "reason": "Autonomous Collaborative Platforms are uncrewed aircraft in the same family as the CCA lines already kept."
+    },
+    {
+      "exhibit": "P-1",
+      "pe_or_bli": "0201UMNISR",
+      "category": "UAS",
+      "reason": "SOCOM 'Unmanned ISR'. Treated as aerial UAS from the title alone. Not yet checked against the J-book; it may include non-air systems."
+    },
+    {
+      "exhibit": "R-1",
+      "pe_or_bli": "1160434BB",
+      "category": "UAS",
+      "reason": "SOCOM 'Unmanned ISR' RDT&E, the counterpart of P-1 0201UMNISR. Same caveat: from the title only."
+    }
+  ],
+  "exclude": [
+    {
+      "exhibit": "P-1",
+      "pe_or_bli": "10TRGT",
+      "account": "3010F",
+      "reason": "'Target Drones' are aerial targets for test and training, not operational UAS. Excluded for consistency with the 'Aerial Targets' lines (Navy P-1 2280, AF R-1 0305116F), which also aren't counted."
+    }
+  ],
+  "reviewed": "2026-11-11, FY2026 P-1/R-1, from titles only (J-book narratives not yet read). Every kept keyword hit was read; misses were looked for with a broader term scan (unmanned, autonomous, launched effects, counter-, air defense, directed energy, targets, robotics).",
+  "not_included_mixed_lines": {
+    "_comment": "Lines with a real but unknown C-UAS/UAS share. They're left out because the exhibits can't split them. Candidates for slice 2, which reads the J-book narrative.",
+    "lines": [
+      "Army M-SHORAD (P-1 8082C14300, R-1 0604117A)",
+      "Marine Corps Ground Based Air Defense (P-1 3006)",
+      "Air Force Airbase Air Defense Systems (R-1 0207522F)",
+      "Navy Directed Energy Systems (P-1 5510) and directed-energy/HEL RDT&E PEs",
+      "Army Future Interceptor (R-1 0604403A)",
+      "Defense Innovation Unit (R-1 0603342D8Z, 0604341D8Z)",
+      "DoD Unmanned System Common Development (R-1 0604400D8Z)",
+      "Marine Corps Unmanned Expeditionary Systems (P-1 4758)"
+    ]
+  }
 }

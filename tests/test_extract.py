@@ -107,3 +107,29 @@ class OverrideValidation(unittest.TestCase):
         p.write_text(json.dumps({"exclude": [{"exhibit": "R-1", "pe_or_bli": "X"}]}))
         with self.assertRaises(ValueError):
             extract.load_overrides(p)
+
+
+class RealLayout(unittest.TestCase):
+    """Header and totals-row shapes seen in the FY2026 Comptroller files."""
+
+    R1_HDR = ["Account", "Account Title", "Organization", "Budget Activity", "Budget Activity Title", "Line Number",
+              "PE/BLI", "Program Element/Budget Line Item (BLI) Title", "Include In TOA", "FY 2026 Total", "Classification"]
+    P1_HDR = ["Account", "Account Title", "Organization", "Budget Activity", "Budget Activity Title", "Line Number",
+              "BSA", "Budget SubActivity (BSA) Title", "Budget Line Item", "Budget Line Item (BLI) Title", "Cost Type",
+              "Cost Type Title", "Add/Non-Add", "FY 2026 Total Quantity", "FY 2026 Total Amount", "Classification"]
+
+    def test_header_mapping(self):
+        r1 = extract.map_columns(self.R1_HDR)
+        self.assertEqual((r1["pe_or_bli"], r1["include_in_toa"]), (6, 8))
+        p1 = extract.map_columns(self.P1_HDR)
+        self.assertEqual((p1["pe_or_bli"], p1["title"], p1["add_non_add"]), (8, 9, 12))
+        self.assertEqual(p1["amounts"], [(14, "FY 2026 Total")])  # quantity dropped, "Amount" normalised
+
+    def test_total_row_check(self):
+        cols = extract.map_columns(self.R1_HDR)
+        tot = [None] * 6 + ["Total of Displayed Rows", None, None, 30, None]
+        data = [["x"] * 9 + [10, "U"], ["x"] * 9 + [20, "U"]]
+        self.assertTrue(extract.check_total_row([tot, self.R1_HDR] + data, 1, cols)["checked"])
+        tot[9] = 31
+        with self.assertRaises(ValueError):
+            extract.check_total_row([tot, self.R1_HDR] + data, 1, cols)

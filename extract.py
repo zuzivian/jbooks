@@ -177,15 +177,22 @@ def map_columns(header: list[object]) -> dict:
         "budget_activity_title": first(lambda c: c.startswith("budget activity title")),
         "line_number": first(lambda c: c.startswith("line number") or c == "line no" or c == "line"),
         # R-1: "Program Element/Budget Line Item (BLI)"; P-1: "Budget Line Item"
-        "pe_or_bli": first(lambda c: ("program element" in c or "budget line item" in c) and "title" not in c),
+        "pe_or_bli": first(lambda c: c in ("pe/bli", "pe", "bli")
+                           or (("program element" in c or "budget line item" in c) and "title" not in c)),
         "title": first(lambda c: ("program element" in c or "budget line item" in c) and "title" in c),
         "description": first(lambda c: "description" in c),
         "classification": first(lambda c: c.startswith("classification")),
+        # P-1: one row per cost type; "Non-Add" rows are memo entries (e.g. multiyear EOQ) not in the line total.
+        "cost_type_title": first(lambda c: c.startswith("cost type title")),
+        "add_non_add": first(lambda c: c.replace(" ", "") == "add/non-add"),
+        # R-1: "Include In TOA" = N marks lines outside DoD total obligational authority.
+        "include_in_toa": first(lambda c: c.startswith("include in toa")),
     }
     amounts = []
     for i, c in enumerate(h):
         if re.search(r"\bFY\s?\d{4}\b", c, re.I) and not re.search(r"quantit|qty", c, re.I):
-            amounts.append((i, c))
+            # P-1 says "FY 2026 Total Amount", R-1 says "FY 2026 Total": use one label for both.
+            amounts.append((i, re.sub(r"\s+Amount$", "", c, flags=re.I)))
     cols["amounts"] = amounts
     if cols["title"] is None:
         raise ValueError(f"no title column found in header: {h}")
@@ -239,12 +246,35 @@ def _rule_for(rules: list[dict], exhibit: str, pe: str, account: str) -> dict | 
     return None
 
 
+def check_total_row(rows: list[list[object]], hi: int, cols: dict) -> dict:
+    """Reconcile the exhibit's own "Total of Displayed Rows" against what we parsed.
+
+    The Comptroller display sheets put a totals row above the header. If our cell
+    reader dropped or misread anything, the column sums won't match. Raises on a
+    mismatch; returns a summary if there's no totals row to check against.
+    """
+    total_row = next((r for r in rows[:hi] if any(_norm(c).lower() == "total of displayed rows" for c in r)), None)
+    if total_row is None:
+        return {"checked": False, "reason": "no 'Total of Displayed Rows' row found"}
+    checked = []
+    for i, label in cols["amounts"]:
+        want = total_row[i] if i < len(total_row) else None
+        if not isinstance(want, (int, float)):
+            continue
+        got = sum(r[i] for r in rows[hi + 1:] if i < len(r) and isinstance(r[i], (int, float)) and not isinstance(r[i], bool))
+        if abs(got - want) > 0.5:
+            raise ValueError(f"parsed sum of {label!r} is {got}, exhibit total row says {want}")
+        checked.append({"column": label, "total_thousands": want})
+    return {"checked": True, "columns": checked}
+
+
 def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
-    """Return (rows, unreadable, excluded) for one exhibit file."""
+    """Return (rows, unreadable, excluded, total_check) for one exhibit file."""
     overrides = overrides or {"exclude": [], "include": []}
     rows = read_xlsx_rows(path)
     hi = find_header(rows)
     cols = map_columns(rows[hi])
+    total_check = check_total_row(rows, hi, cols)
     out, unreadable, excluded = [], [], []
     exhibit = source.get("exhibit", "")
 
@@ -264,7 +294,7 @@ def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
         exc = _rule_for(overrides["exclude"], exhibit, pe, account)
         rid = f"{source['id']}:r{n}"
         if exc:
-            excluded.append({"id": rid, "pe_or_bli": pe, "title": title, "matched_keywords": hits,
+            excluded.append({"id": rid, "exhibit": exhibit, "pe_or_bli": pe, "title": title, "matched_keywords": hits,
                              "reason": exc["reason"]})
             continue
         if inc and not hits:
@@ -279,6 +309,7 @@ def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
             else:
                 bad.append({"column": label, "raw": str(v)})
         account_title = get(row, "account_title")
+        add_flag, toa = get(row, "add_non_add"), get(row, "include_in_toa")
         rec = {
             "id": rid,
             "exhibit": exhibit,
@@ -291,6 +322,10 @@ def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
             "appropriation": " ".join(x for x in [account, account_title] if x),
             "budget_activity": " ".join(x for x in [get(row, "budget_activity"), get(row, "budget_activity_title")] if x),
             "classification": get(row, "classification"),
+            "cost_type": get(row, "cost_type_title"),
+            "add_non_add": add_flag,
+            "include_in_toa": toa,
+            "counts_in_total": add_flag.lower() != "non-add" and toa.upper() != "N",
             "category": category,
             "match_tier": tier,
             "matched_keywords": hits,
@@ -302,7 +337,23 @@ def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
         out.append(rec)
         for b in bad:
             unreadable.append({"id": rid, **b})
-    return out, unreadable, excluded
+    return out, unreadable, excluded, total_check
+
+
+def check_sha256sums(path: pathlib.Path) -> None:
+    """If the file's folder has a SHA256SUMS ("<sha>  <file>  [url]", '#' comments), verify it."""
+    sums = path.parent / "SHA256SUMS"
+    if not sums.exists():
+        return
+    for line in sums.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        parts = line.split()
+        if len(parts) >= 2 and pathlib.Path(parts[1]).name == path.name:
+            if sha256(path) != parts[0]:
+                raise ValueError(f"{path} does not match {sums}")
+            return
 
 
 def sha256(path: pathlib.Path) -> str:
@@ -348,6 +399,7 @@ def main(argv=None) -> int:
                 ap.error(f"{dest} is missing: run with --fetch, or download {s['url']} there")
             if s.get("sha256") and sha256(dest) != s["sha256"]:
                 ap.error(f"{dest} does not match the sha256 pinned in sources.json")
+            check_sha256sums(dest)
             jobs.append((dest, s))
     for spec in a.input:
         path, _, sid = spec.partition("=")
@@ -367,14 +419,25 @@ def main(argv=None) -> int:
     overrides = load_overrides(ov_path)
     rows, unreadable, excluded, used = [], [], [], []
     for path, s in jobs:
-        r, u, x = screen(path, s, overrides)
+        r, u, x, tc = screen(path, s, overrides)
         rows += r
         unreadable += u
         excluded += x
         used.append({"id": s["id"], "exhibit": s.get("exhibit"), "fiscal_year": s.get("fiscal_year"),
-                     "url": s["url"], "sha256": sha256(path), "lines_matched": len(r),
-                     "lines_excluded": len(x)})
+                     "url": s["url"], "url_status": s.get("url_status"), "sha256": sha256(path), "lines_matched": len(r),
+                     "lines_excluded": len(x), "total_row_check": tc})
         print(f"{s['id']}: {len(r)} lines kept, {len(x)} excluded by overrides", file=sys.stderr)
+
+    # A rule that matches nothing is almost always a typo (wrong code or account): fail loudly.
+    exhibits_run = {s.get("exhibit") for _, s in jobs}
+    hit = {(r["exhibit"], r["pe_or_bli"]) for r in rows} | {(x["exhibit"], x["pe_or_bli"]) for x in excluded}
+    for kind in ("include", "exclude"):
+        for rule in overrides[kind]:
+            if rule["exhibit"] in exhibits_run and (rule["exhibit"], rule["pe_or_bli"]) not in hit:
+                ap.error(f"{kind} rule matched no line: {rule}")
+            if kind == "exclude" and rule["exhibit"] in exhibits_run and not any(
+                    x["exhibit"] == rule["exhibit"] and x["pe_or_bli"] == rule["pe_or_bli"] for x in excluded):
+                ap.error(f"exclude rule matched no line: {rule}")
 
     doc = {
         "status": a.status,

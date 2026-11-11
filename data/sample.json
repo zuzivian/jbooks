@@ -1,6 +1,6 @@
 {
  "status": "synthetic",
- "generated_at": "2026-11-11T20:35:20+00:00",
+ "generated_at": "2026-11-11T23:05:23+00:00",
  "units": "thousands of US dollars, as printed in the exhibit",
  "method": "case-insensitive keyword screen of line titles, then hand-reviewed overrides; see README",
  "keywords": [
@@ -111,6 +111,7 @@
  "excluded": [
   {
    "id": "synthetic-r1:r7",
+   "exhibit": "R-1",
    "pe_or_bli": "TEST0004F",
    "title": "Synthetic Drone Swarm Experiment",
    "matched_keywords": [
@@ -125,18 +126,28 @@
    "exhibit": "R-1",
    "fiscal_year": 2026,
    "url": "tests/fixtures/synthetic_r1.xlsx",
+   "url_status": null,
    "sha256": "d87f4f96e95647ff9e7c5e839fde0a3d479d1cf9f28176955cab0aa8cd2e22b7",
    "lines_matched": 5,
-   "lines_excluded": 1
+   "lines_excluded": 1,
+   "total_row_check": {
+    "checked": false,
+    "reason": "no 'Total of Displayed Rows' row found"
+   }
   },
   {
    "id": "synthetic-p1",
    "exhibit": "P-1",
    "fiscal_year": 2026,
    "url": "tests/fixtures/synthetic_p1.xlsx",
+   "url_status": null,
    "sha256": "853771d31521b3b583049c3d473c89367627def31e8ef11a538dad1fc9003ba8",
    "lines_matched": 2,
-   "lines_excluded": 0
+   "lines_excluded": 0,
+   "total_row_check": {
+    "checked": false,
+    "reason": "no 'Total of Displayed Rows' row found"
+   }
   }
  ],
  "unreadable": [],
@@ -153,6 +164,10 @@
    "appropriation": "2040A Research, Development, Test & Eval, Army",
    "budget_activity": "04 Advanced Component Development & Prototypes",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "C-UAS",
    "match_tier": "core",
    "matched_keywords": [
@@ -183,6 +198,10 @@
    "appropriation": "2040A Research, Development, Test & Eval, Army",
    "budget_activity": "05 System Development & Demonstration",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "C-UAS",
    "match_tier": "override",
    "matched_keywords": [],
@@ -209,6 +228,10 @@
    "appropriation": "1319N Research, Development, Test & Eval, Navy",
    "budget_activity": "04 Advanced Component Development & Prototypes",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "UAS",
    "match_tier": "core",
    "matched_keywords": [
@@ -237,6 +260,10 @@
    "appropriation": "0400D Research, Development, Test & Eval, Defense-Wide",
    "budget_activity": "03 Advanced Technology Development",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "UAS",
    "match_tier": "core",
    "matched_keywords": [
@@ -265,6 +292,10 @@
    "appropriation": "3600F Research, Development, Test & Eval, Air Force",
    "budget_activity": "07 Operational System Development",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "UAS",
    "match_tier": "extended",
    "matched_keywords": [
@@ -294,6 +325,10 @@
    "appropriation": "2035A Other Procurement, Army",
    "budget_activity": "02 Communications and Electronics Equipment",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "C-UAS",
    "match_tier": "core",
    "matched_keywords": [
@@ -322,6 +357,10 @@
    "appropriation": "1508N Procurement of Ammo, Navy & Marine Corps",
    "budget_activity": "01 Proc Ammo, Navy",
    "classification": "U",
+   "cost_type": "",
+   "add_non_add": "",
+   "include_in_toa": "",
+   "counts_in_total": true,
    "category": "UAS",
    "match_tier": "core",
    "matched_keywords": [

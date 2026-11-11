@@ -7,9 +7,10 @@ A research tool that pulls drone (UAS) and counter-UAS (C-UAS) budget lines out 
 ## Status (slice 1)
 
 - `extract.py` reads the Comptroller's R-1 (RDT&E) and P-1 (Procurement) exhibit spreadsheets and writes `data/lines.json`.
-- `index.html` is a static viewer with search, service and category filters, a choice of amount column, and sort by amount.
-- **`data/lines.json` has no live rows yet.** The sandbox this was built in couldn't reach the DoD hosts (`comptroller.war.gov` and `comptroller.defense.gov`; the egress proxy answered 403 to CONNECT). The extractor has only been run end to end against synthetic fixtures. The FY2026 files are being fetched from an unrestricted machine into `sources/fy2026/`. To fill the file once they land, run `python3 extract.py --local`.
-- `data/sample.json` is **synthetic** output from `tests/fixtures/`. Its PE/BLI codes start with `TEST` and its dollar figures are made up. The viewer shows it only behind a red "Synthetic demo data" banner (`index.html?demo=1`).
+- `index.html` is a static viewer with search, service, category and keyword-set filters, a choice of amount column, and sort by amount.
+- **`data/lines.json` is live FY2026 PB data.** It holds 66 budget lines (71 rows; a P-1 line can span several cost-type rows), screened from the two FY2026 spreadsheets in `sources/fy2026/`. Each match was reviewed by hand from its title (see `overrides.json`). FY2026 total (discretionary plus reconciliation) across the summable rows: **$5,324.1M**. By service: Army $2,291.2M, Navy $1,961.2M, Air Force $1,010.5M, Defense-Wide $34.0M, Marine Corps $27.2M. That splits into UAS $4,343.1M and C-UAS $981.0M. These are sums of matched lines, not an official tally.
+- Both files' parsed column sums match the exhibits' own "Total of Displayed Rows" exactly. The check runs on every extraction.
+- `data/sample.json` is **synthetic** test output (PE codes `TEST…`, made-up figures). The viewer shows it only behind a red banner (`index.html?demo=1`).
 
 ## Source
 
@@ -17,8 +18,10 @@ For slice 1 the source is the Comptroller's machine-readable exhibit spreadsheet
 
 | Exhibit | File | Status |
 |---|---|---|
-| P-1 Procurement | `https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx` | Listed in the FY2026 folder by web search; not downloaded from the sandbox |
-| R-1 RDT&E | `https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx` | **Unverified**: inferred from the P-1 filename. Confirm it on the index page |
+| P-1 Procurement | `https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx` | Expected Comptroller path. Committed copy at `sources/fy2026/p1_display.xlsx`, SHA-256 `4d965906…a9c0` |
+| R-1 RDT&E | `https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx` | **Path inferred** from the P-1 filename. Committed copy at `sources/fy2026/r1_display.xlsx`, SHA-256 `671c8e81…cc2e` |
+
+The committed copies were downloaded by hand in a browser on 2026-11-11, because cloud runners get a 403 from the Comptroller site. They are byte-for-byte unmodified, and `sources/fy2026/SHA256SUMS` lists their hashes. The exact click-through URLs weren't captured, so the URLs above are the expected paths. `extract.py --local` checks both the hashes pinned in `sources.json` and `SHA256SUMS`.
 
 Index page: <https://comptroller.war.gov/Budget-Materials/Budget2026/>. The PDF versions (`FY2026_r1.pdf`, `FY2026_p1.pdf`) and the service J-books sit under the same folder. In 2025 the site moved from `comptroller.defense.gov` to `comptroller.war.gov`.
 
@@ -30,7 +33,9 @@ Why these files: R-1 and P-1 are the department-wide line-item lists that sit on
 2. Find the header row: the first row with an `Account` cell and a `…Title` cell. Map the columns by pattern, because the wording drifts from year to year. A column counts as an amount column if its header contains `FY yyyy` and doesn't mention quantity.
 3. Keep a line if its PE/BLI title, or its description column where one exists, matches any keyword below.
 4. Take the service from the end of the appropriation title, for example "Aircraft Procurement, **Army**". `Procurement of Ammo, Navy & Marine Corps` counts as Navy.
-5. Copy amounts exactly as printed, in **thousands of dollars**. A cell that isn't a plain number is left out of the row and logged under `unreadable`.
+5. Copy amounts exactly as printed, in **thousands of dollars**. A cell that isn't a plain number is left out of the row and logged under `unreadable`. Before any line is kept, the parsed column sums are reconciled against the exhibit's own "Total of Displayed Rows", and the run aborts on any mismatch.
+   - **P-1 cost types.** A budget line item can appear on several rows: weapon system cost, advance procurement (CY), "Less: advance procurement (PY)", and so on. Rows marked **Non-Add** are memo entries, such as multiyear economic-order-quantity amounts. They are kept and shown, but `counts_in_total` is false and the viewer doesn't sum them.
+   - **R-1 TOA.** Lines with "Include In TOA" = N are also marked `counts_in_total: false`. None of the FY2026 matches are affected.
 6. Record each source file's URL and SHA-256 hash, and put the source URL and row number on every line.
 
 ### Keyword list
@@ -75,7 +80,10 @@ After the screen, each kept line is checked by hand. Record every decision with 
 
 - `exclude` drops a false hit. The dropped line is still listed under `excluded` in `data/lines.json`.
 - `include` adds a line no keyword caught. It shows in the viewer as "hand-added", with its reason.
-- `account` is optional and narrows a rule to one appropriation. A rule without a `reason` is rejected.
+- `account` is optional and narrows a rule to one appropriation. A rule without a `reason` is rejected, and so is a rule that matches no line (usually a typo).
+- `not_included_mixed_lines` lists lines with a real but unknown UAS/C-UAS share, such as M-SHORAD, MADIS/GBAD, directed energy and DIU. They are left out because the exhibits can't split them. Slice 2 reads their J-book narratives.
+
+The FY2026 review so far is from **titles only**. It adds 6 lines (launched effects, low-altitude unmanned systems, Unmanned Carrier Aviation, Autonomous Collaborative Platforms, and SOCOM Unmanned ISR in both P-1 and R-1) and drops 1 (Air Force "Target Drones", which are aerial targets).
 
 ### Known misses
 
@@ -108,8 +116,8 @@ Browsers block `fetch()` from `file://`, so serve the folder over HTTP. Any stat
 
 The plan is to publish the viewer publicly, for example on GitHub Pages from `main`, once the real FY2026 data has been reviewed. **It is not public yet.** Before turning Pages on:
 
-1. `data/lines.json` has `status: "live"`. It was built with `python3 extract.py --local` from the committed `sources/fy2026/*.xlsx`, and the SHA-256s are pinned in `sources.json`.
-2. Every kept line has been read against the PDF exhibit, and each false hit is recorded in `overrides.json` with a reason.
+1. `data/lines.json` has `status: "live"`. It was built with `python3 extract.py --local` from the committed `sources/fy2026/*.xlsx`, and the SHA-256s are pinned in `sources.json`. *(Done.)*
+2. Every kept line has been read against the PDF exhibit, and each false hit is recorded in `overrides.json` with a reason. *(Titles reviewed; PDF/J-book check not yet done.)*
 3. The `lines_matched` counts and per-service totals are spot-checked against the R-1/P-1 PDFs.
 4. The repository has nothing private in it. Then, in Settings → Pages, deploy from branch `main`, folder `/`. The site needs no build step.
 
@@ -124,6 +132,6 @@ python3 -m unittest discover -s tests
 
 ## Data schema (`data/lines.json`)
 
-`status` (`live` | `synthetic` | `not_fetched`), `generated_at`, `units`, `keywords[]`, `sources[]` (`id`, `exhibit`, `fiscal_year`, `url`, `sha256`, `lines_matched`, `lines_excluded`), `overrides_file`, `excluded[]`, `unreadable[]`, and `rows[]` with:
+`status` (`live` | `synthetic` | `not_fetched`), `generated_at`, `units`, `keywords[]`, `sources[]` (`id`, `exhibit`, `fiscal_year`, `url`, `url_status`, `sha256`, `lines_matched`, `lines_excluded`, `total_row_check`), `overrides_file`, `excluded[]`, `unreadable[]`, and `rows[]` with:
 
-`id`, `exhibit`, `fiscal_year`, `line_number`, `pe_or_bli`, `title`, `service`, `organization`, `appropriation`, `budget_activity`, `classification`, `category`, `match_tier` (`core` | `extended` | `override`), `matched_keywords[]`, `override_reason`, `amounts_thousands{column → number}`, `source_url`, `source_row`.
+`id`, `exhibit`, `fiscal_year`, `line_number`, `pe_or_bli`, `title`, `service`, `organization`, `appropriation`, `budget_activity`, `classification`, `cost_type`, `add_non_add`, `include_in_toa`, `counts_in_total`, `category`, `match_tier` (`core` | `extended` | `override`), `matched_keywords[]`, `override_reason`, `amounts_thousands{column → number}`, `source_url`, `source_row`.
