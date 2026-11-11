@@ -104,6 +104,17 @@ python3 -m http.server 8000   # then open http://localhost:8000  (add ?demo=1 fo
 
 Browsers block `fetch()` from `file://`, so serve the folder over HTTP. Any static host works, including GitHub Pages and Vercel.
 
+## Publish (not yet)
+
+The plan is to publish the viewer publicly, for example on GitHub Pages from `main`, once the real FY2026 data has been reviewed. **It is not public yet.** Before turning Pages on:
+
+1. `data/lines.json` has `status: "live"`. It was built with `python3 extract.py --local` from the committed `sources/fy2026/*.xlsx`, and the SHA-256s are pinned in `sources.json`.
+2. Every kept line has been read against the PDF exhibit, and each false hit is recorded in `overrides.json` with a reason.
+3. The `lines_matched` counts and per-service totals are spot-checked against the R-1/P-1 PDFs.
+4. The repository has nothing private in it. Then, in Settings → Pages, deploy from branch `main`, folder `/`. The site needs no build step.
+
+The synthetic `data/sample.json` stays in the repo for the demo. The page shows it only behind the "Synthetic demo data" banner.
+
 ## Tests
 
 ```sh
