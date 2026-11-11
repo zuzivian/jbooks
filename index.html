@@ -10,14 +10,22 @@
   :root {
     --bg: #fbfaf8; --fg: #1d1d1b; --muted: #6b6a66; --line: #e4e1db; --card: #ffffff;
     --accent: #2f5d8a; --warn-bg: #fff4d6; --warn-fg: #5c4400; --demo-bg: #fde8e6; --demo-fg: #7a1d14;
-    --cuas: #8a3b2f;
+    --cuas: #8a3b2f; --cca: #6250d6;
+    --s-base: #a3a19b; --s-req: #2a78d6; --s-down: #eb6834; --grid: #e4e1db;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
       --bg: #161615; --fg: #e9e7e2; --muted: #a09d96; --line: #33322f; --card: #1e1e1c;
       --accent: #8db7e0; --warn-bg: #3a300f; --warn-fg: #f3dc9c; --demo-bg: #3e1a16; --demo-fg: #f6c1b9;
-      --cuas: #e39a8b;
+      --cuas: #e39a8b; --cca: #9085e9;
+      --s-base: #6f6d68; --s-req: #3987e5; --s-down: #d95926; --grid: #33322f;
     }
+  }
+  :root[data-theme="dark"] {
+    --bg: #161615; --fg: #e9e7e2; --muted: #a09d96; --line: #33322f; --card: #1e1e1c;
+    --accent: #8db7e0; --warn-bg: #3a300f; --warn-fg: #f3dc9c; --demo-bg: #3e1a16; --demo-fg: #f6c1b9;
+    --cuas: #e39a8b; --cca: #9085e9;
+    --s-base: #6f6d68; --s-req: #3987e5; --s-down: #d95926; --grid: #33322f;
   }
   * { box-sizing: border-box; }
   html { -webkit-text-size-adjust: 100%; }
@@ -49,6 +57,29 @@
   .sub { color: var(--muted); font-size: 12px; }
   .tag { display: inline-block; font-size: 11px; padding: 0 6px; border-radius: 4px; border: 1px solid var(--line); color: var(--muted); }
   .tag.cuas { color: var(--cuas); border-color: currentColor; }
+  .tag.cca { color: var(--cca); border-color: currentColor; }
+  .findings { background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--accent); border-radius: 8px;
+    padding: 14px 16px 6px; margin: 20px 0; }
+  .findings h2 { margin: 0 0 8px; font-size: 1rem; }
+  .findings ul { margin: 0; padding-left: 18px; }
+  .findings li { margin-bottom: 8px; max-width: 80ch; }
+  .note { font-size: 13px; color: var(--muted); max-width: 80ch; margin-top: 8px; }
+  .label { display: inline-block; font-size: 12px; font-weight: 600; color: var(--warn-fg); background: var(--warn-bg);
+    padding: 2px 8px; border-radius: 4px; margin-bottom: 8px; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 32px; }
+  .grid2 > div { min-width: 0; }
+  h3 { font-size: 0.95rem; margin: 20px 0 6px; }
+  table.compact { font-size: 13px; }
+  table.compact th, table.compact td { padding: 6px 6px; }
+  .scroll { overflow-x: auto; max-width: 100%; }
+  .chart { width: 100%; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { fill: var(--fg); font-size: 12px; font-variant-numeric: tabular-nums; }
+  .chart text.muted { fill: var(--muted); }
+  .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin: 4px 0 6px; flex-wrap: wrap; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+  .pos { color: var(--fg); } .neg { color: var(--fg); }
+  details summary { cursor: pointer; color: var(--accent); margin: 12px 0; }
   .empty { color: var(--muted); padding: 24px 0; }
   .method li { margin-bottom: 6px; }
   code { font-size: 13px; overflow-wrap: anywhere; }
@@ -57,12 +88,15 @@
     main { padding-top: 20px; }
     .controls { grid-template-columns: 1fr 1fr; }
     .controls .search { grid-column: 1 / -1; }
-    thead { display: none; }
-    table, tbody, tr, td { display: block; width: 100%; }
-    tr { border-bottom: 1px solid var(--line); padding: 10px 0; }
-    td { border: 0; padding: 2px 0; }
-    td.num { text-align: left; }
-    td.num::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
+    .grid2 { grid-template-columns: 1fr; }
+    table.cards thead { display: none; }
+    table.cards, table.cards tbody, table.cards tr, table.cards td { display: block; width: 100%; }
+    table.cards tr { border-bottom: 1px solid var(--line); padding: 10px 0; }
+    table.cards td { border: 0; padding: 2px 0; }
+    table.cards td.num { text-align: left; }
+    table.cards td.num::before { content: attr(data-label) ": "; color: var(--muted); font-size: 12px; }
+    table.compact { font-size: 12px; }
+    table.compact th, table.compact td { padding: 5px 3px; }
   }
 </style>
 </head>
@@ -73,17 +107,79 @@
 
   <div id="banner"></div>
 
+  <section class="findings" id="findings" hidden aria-labelledby="findings-h">
+    <h2 id="findings-h">Key findings</h2>
+    <ul id="findings-list"></ul>
+  </section>
+
+  <section id="changes" hidden aria-labelledby="changes-h">
+    <h2 id="changes-h">FY2025 → FY2026 change</h2>
+    <div class="label">Matched lines only. Not an official tally.</div>
+    <p class="note" id="change-note"></p>
+    <div class="scroll"><table class="compact" id="tot-table">
+      <thead><tr><th>Matched lines</th><th class="num">FY25 enacted</th><th class="num">FY26 request</th><th class="num">Change</th><th class="num">%</th></tr></thead>
+      <tbody id="tot-rows"></tbody>
+    </table></div>
+    <p class="note" id="cca-note"></p>
+
+    <div class="grid2">
+      <div>
+        <h3 id="svc-h">Totals by service</h3>
+        <div class="legend" aria-hidden="true"><span><i style="background:var(--s-base)"></i>FY25 enacted</span><span><i style="background:var(--s-req)"></i>FY26 request</span></div>
+        <div class="chart" id="svc-chart" role="img" aria-labelledby="svc-h"></div>
+        <div class="scroll"><table class="compact"><thead><tr><th>Service</th><th class="num">FY25</th><th class="num">FY26</th><th class="num">Change</th><th class="num">%</th></tr></thead><tbody id="svc-rows"></tbody></table></div>
+      </div>
+      <div>
+        <h3 id="cat-h">Change by category</h3>
+        <div class="legend" aria-hidden="true"><span><i style="background:var(--s-req)"></i>Increase</span><span><i style="background:var(--s-down)"></i>Decrease</span></div>
+        <div class="chart" id="cat-chart" role="img" aria-labelledby="cat-h"></div>
+        <div class="scroll"><table class="compact"><thead><tr><th>Category</th><th class="num">FY25</th><th class="num">FY26</th><th class="num">Change</th><th class="num">%</th></tr></thead><tbody id="cat-rows"></tbody></table></div>
+      </div>
+    </div>
+
+    <div class="grid2">
+      <div>
+        <h3>Top 10 increases</h3>
+        <table class="compact"><thead><tr><th>Line</th><th class="num">Change</th><th class="num">%</th></tr></thead><tbody id="up-rows"></tbody></table>
+      </div>
+      <div>
+        <h3>Top 10 decreases</h3>
+        <table class="compact"><thead><tr><th>Line</th><th class="num">Change</th><th class="num">%</th></tr></thead><tbody id="down-rows"></tbody></table>
+      </div>
+    </div>
+    <p class="note">"New" means the line has no FY2025 enacted figure; "ended" means it has no FY2026 request. In FY2026 the Army moved several drone and counter-drone procurement lines into a new "Agile Portfolio Management" budget activity with new codes (for example C-sUAS: 0219AD0500 in FY2025, 0010I24000 in FY2026). An old code ending and a new one starting can be the same program. The exhibits do not link them, and totals by service and category are not affected.</p>
+
+    <details>
+      <summary>Every matched line, FY25 → FY26 (<span id="all-count"></span>)</summary>
+      <table class="compact cards">
+        <thead><tr><th>Line</th><th>Service</th><th class="num">FY25 ($K)</th><th class="num">FY26 ($K)</th><th class="num">Change ($K)</th><th class="num">%</th></tr></thead>
+        <tbody id="all-rows"></tbody>
+      </table>
+    </details>
+  </section>
+
+  <section id="related" hidden aria-labelledby="related-h">
+    <h2 id="related-h">Related, not counted</h2>
+    <p class="note">These lines fund air defence, directed energy or broad innovation portfolios that include some counter-drone or drone work. The exhibits give one figure per line and don't say how much, so none of this money is in any total above. Amounts are the whole line.</p>
+    <table class="compact cards">
+      <thead><tr><th>Line</th><th>Service</th><th class="num">FY25 ($K)</th><th class="num">FY26 ($K)</th><th>Why it isn't counted</th></tr></thead>
+      <tbody id="related-rows"></tbody>
+    </table>
+  </section>
+
+  <h2>All screened rows</h2>
+
   <div class="controls" id="controls" hidden>
     <div class="search"><label for="q">Search title, PE/BLI, appropriation</label><input id="q" type="search" placeholder="e.g. counter, MQ-, 0604"></div>
     <div><label for="svc">Service</label><select id="svc"><option value="">All services</option></select></div>
-    <div><label for="cat">Category</label><select id="cat"><option value="">All</option><option>UAS</option><option>C-UAS</option></select></div>
+    <div><label for="cat">Category</label><select id="cat"><option value="">All</option><option>UAS</option><option>C-UAS</option><option>CCA</option></select></div>
     <div><label for="tier">Keyword set</label><select id="tier"><option value="">All</option><option value="core">Core only</option><option value="extended">Extended only</option><option value="override">Hand-added</option></select></div>
     <div><label for="col">Amount column ($K)</label><select id="col"></select></div>
     <div><button id="dir" type="button" aria-label="Sort direction">Largest first</button></div>
   </div>
 
   <div class="summary" id="summary"></div>
-  <table id="table" hidden>
+  <table id="table" class="cards" hidden>
     <thead><tr><th>Line</th><th>Service</th><th>Appropriation</th><th class="num" id="colhead">$K</th><th>Source</th></tr></thead>
     <tbody id="rows"></tbody>
   </table>
@@ -130,12 +226,133 @@
     return same.filter(function (c) { return /total/i.test(c); })[0] || same[0] || "";
   }
 
-  function load(url, demo) {
+  function getJSON(url) {
     return fetch(url, { cache: "no-store" }).then(function (r) {
       if (!r.ok) throw new Error(url + " returned " + r.status);
       return r.json();
-    }).then(function (doc) { init(doc, demo); });
+    });
   }
+  function load(url, demo) {
+    return getJSON(url).then(function (doc) {
+      init(doc, demo);
+      // The change view is built from live data only (analyze.py); the synthetic demo has none.
+      if (demo || doc.status !== "live") { hideChanges(); return; }
+      return getJSON("data/changes.json").then(function (ch) { initChanges(ch, doc); });
+    });
+  }
+
+  // ---- FY25 -> FY26 change view (numbers come from data/changes.json, built by analyze.py) ----
+  var fmtPct = function (p) { return p === null || p === undefined ? "—" : (p > 0 ? "+" : "") + p.toFixed(1) + "%"; };
+  var fmtD = function (k) { return (k > 0 ? "+" : k < 0 ? "−" : "") + fmtM(Math.abs(k)); };
+  var fmtDK = function (k) { return (k > 0 ? "+" : k < 0 ? "−" : "") + fmtK(Math.abs(k)); };
+  var STATUS = { "new in FY26": "new", "no FY26 request": "ended", "neither year": "no FY25/FY26 money" };
+
+  function hideChanges() { ["findings", "changes", "related"].forEach(function (id) { $(id).hidden = true; }); }
+
+  function sumRow(name, t) {
+    return "<tr><td>" + esc(name) + '</td><td class="num">' + fmtM(t.fy25) + '</td><td class="num">' + fmtM(t.fy26) +
+      '</td><td class="num">' + fmtD(t.change) + '</td><td class="num">' + fmtPct(t.pct) + "</td></tr>";
+  }
+  function lineCell(x) {
+    var st = STATUS[x.status];
+    return '<div class="t">' + esc(x.title) + '</div><div class="sub">' + esc(x.service) + " · " + esc(x.exhibit) + " " + esc(x.pe_or_bli) +
+      (x.category ? ' · <span class="tag' + (x.category === "C-UAS" ? " cuas" : x.category === "CCA" ? " cca" : "") + '">' + esc(x.category) + "</span>" : "") +
+      (st ? ' <span class="tag">' + esc(st) + "</span>" : "") + "</div>";
+  }
+
+  function initChanges(ch, doc) {
+    state.changes = ch;
+    if (ch.lines_generated_at !== doc.generated_at) {
+      $("banner").innerHTML += '<div class="banner warn" role="status">data/changes.json was built from a different data/lines.json. Run <code>python3 analyze.py</code>.</div>';
+    }
+    $("findings-list").innerHTML = ch.findings.map(function (f) { return "<li>" + esc(f) + "</li>"; }).join("");
+    $("change-note").textContent = "Compares the " + ch.base_column + " column with the " + ch.request_column +
+      " column (discretionary plus reconciliation) for the same " + ch.totals.all.lines + " screened lines. A blank exhibit cell counts as zero.";
+    $("tot-rows").innerHTML = sumRow("All matched lines", ch.totals.all) + sumRow("Excluding CCA", ch.totals.excluding_cca);
+    $("cca-note").textContent = ch.cca_note;
+    $("svc-rows").innerHTML = ch.by_service.map(function (g) { return sumRow(g.name, g); }).join("");
+    $("cat-rows").innerHTML = ch.by_category.map(function (g) { return sumRow(g.name, g); }).join("");
+    var mv = function (x) { return "<tr><td>" + lineCell(x) + '</td><td class="num">' + fmtD(x.change) + '</td><td class="num">' + fmtPct(x.pct) + "</td></tr>"; };
+    $("up-rows").innerHTML = ch.movers.up.map(mv).join("");
+    $("down-rows").innerHTML = ch.movers.down.map(mv).join("");
+    $("all-count").textContent = ch.lines.length + " lines";
+    $("all-rows").innerHTML = ch.lines.map(function (x) {
+      return "<tr><td>" + lineCell(x) + "</td><td>" + esc(x.service) + "</td>" +
+        '<td class="num" data-label="FY25 ($K)">' + fmtK(x.fy25) + '</td><td class="num" data-label="FY26 ($K)">' + fmtK(x.fy26) +
+        '</td><td class="num" data-label="Change ($K)">' + fmtDK(x.change) + '</td><td class="num" data-label="%">' + fmtPct(x.pct) + "</td></tr>";
+    }).join("");
+    $("related-rows").innerHTML = ch.related_not_counted.map(function (x) {
+      return '<tr><td><div class="t">' + esc(x.title) + '</div><div class="sub">' + esc(x.exhibit) + " " + esc(x.pe_or_bli) +
+        ' · <span class="tag">' + esc(x.group) + '</span> · <a href="' + esc(safeHref(x.source_url)) + '">' + esc(x.exhibit) + "</a> row " +
+        esc(x.source_rows.join(", ")) + "</div></td><td>" + esc(x.service) + "</td>" +
+        '<td class="num" data-label="FY25 ($K)">' + fmtK(x.fy25) + '</td><td class="num" data-label="FY26 ($K)">' + fmtK(x.fy26) +
+        '</td><td class="sub">' + esc(x.related_reason) + "</td></tr>";
+    }).join("");
+    $("findings").hidden = false; $("changes").hidden = false; $("related").hidden = !ch.related_not_counted.length;
+    drawCharts();
+  }
+
+  // ---- Vanilla SVG bar charts, redrawn at the container's width so text stays legible on a phone ----
+  var SVGNS = "http://www.w3.org/2000/svg";
+  function el(tag, attrs, parent, text) {
+    var e = document.createElementNS(SVGNS, tag);
+    Object.keys(attrs).forEach(function (k) { e.setAttribute(k, attrs[k]); });
+    if (text !== undefined) e.textContent = text;
+    if (parent) parent.appendChild(e);
+    return e;
+  }
+  // Horizontal bar with a 4px rounded end away from the baseline.
+  function bar(g, x0, x1, y, h, fill, tip) {
+    var left = Math.min(x0, x1), w = Math.abs(x1 - x0), r = Math.min(4, w, h / 2), right = x1 >= x0;
+    var d = right
+      ? "M" + left + "," + y + "h" + (w - r) + "a" + r + "," + r + " 0 0 1 " + r + "," + r + "v" + (h - 2 * r) + "a" + r + "," + r + " 0 0 1 " + (-r) + "," + r + "h" + (r - w) + "z"
+      : "M" + (left + w) + "," + y + "h" + (r - w) + "a" + r + "," + r + " 0 0 0 " + (-r) + "," + r + "v" + (h - 2 * r) + "a" + r + "," + r + " 0 0 0 " + r + "," + r + "h" + (w - r) + "z";
+    var p = el("path", { d: w > 0 ? d : "M" + x0 + "," + y + "v" + h, fill: fill, stroke: w > 0 ? "none" : fill }, g);
+    el("title", {}, p, tip);
+  }
+  function measure(svg, s) { var t = el("text", { x: 0, y: 0 }, svg, s), w = t.getComputedTextLength ? t.getComputedTextLength() : s.length * 7; svg.removeChild(t); return w; }
+
+  // rows: [{label, values: [{v, fill, tip, text}]}]; values drawn as stacked-down sub-bars from a zero baseline.
+  function hbar(container, rows, opts) {
+    container.innerHTML = "";
+    var W = Math.max(260, container.clientWidth || 320), barH = 14, gap = 2, groupGap = 14;
+    var svg = el("svg", { width: W, xmlns: SVGNS, "aria-hidden": "true" }, container);
+    var labelW = Math.max.apply(null, rows.map(function (r) { return measure(svg, r.label); })) + 10;
+    var valW = Math.max.apply(null, rows.map(function (r) { return Math.max.apply(null, r.values.map(function (v) { return measure(svg, v.text); })); })) + 8;
+    var all = []; rows.forEach(function (r) { r.values.forEach(function (v) { all.push(v.v); }); });
+    var lo = Math.min(0, Math.min.apply(null, all)), hi = Math.max(0, Math.max.apply(null, all));
+    var plotL = labelW + (lo < 0 ? valW : 0), plotR = W - (hi > 0 ? valW : 4);
+    var sx = function (v) { return plotL + (v - lo) / ((hi - lo) || 1) * (plotR - plotL); };
+    var y = 4, g = el("g", {}, svg);
+    rows.forEach(function (r) {
+      var gh = r.values.length * barH + (r.values.length - 1) * gap;
+      el("text", { x: 0, y: y + gh / 2 + 4 }, g, r.label);
+      r.values.forEach(function (v, i) {
+        var by = y + i * (barH + gap);
+        bar(g, sx(0), sx(v.v), by, barH, v.fill, v.tip);
+        var tx = v.v >= 0 ? sx(v.v) + 4 : sx(v.v) - 4;
+        el("text", { x: tx, y: by + barH / 2 + 4, "text-anchor": v.v >= 0 ? "start" : "end", "class": i === 0 && r.values.length > 1 ? "muted" : "" }, g, v.text);
+      });
+      y += gh + groupGap;
+    });
+    el("line", { x1: sx(0), x2: sx(0), y1: 0, y2: y - groupGap + 4, stroke: "var(--muted)", "stroke-width": 1 }, g);
+    svg.setAttribute("height", y - groupGap + 8);
+    svg.setAttribute("viewBox", "0 0 " + W + " " + (y - groupGap + 8));
+  }
+
+  function drawCharts() {
+    var ch = state.changes; if (!ch) return;
+    hbar($("svc-chart"), ch.by_service.map(function (g) {
+      return { label: g.name, values: [
+        { v: g.fy25, fill: "var(--s-base)", text: fmtM(g.fy25), tip: g.name + " FY25 enacted: " + fmtM(g.fy25) },
+        { v: g.fy26, fill: "var(--s-req)", text: fmtM(g.fy26), tip: g.name + " FY26 request: " + fmtM(g.fy26) + " (" + fmtD(g.change) + ")" }] };
+    }));
+    hbar($("cat-chart"), ch.by_category.map(function (g) {
+      return { label: g.name, values: [{ v: g.change, fill: g.change >= 0 ? "var(--s-req)" : "var(--s-down)",
+        text: fmtD(g.change) + " (" + fmtPct(g.pct) + ")", tip: g.name + ": " + fmtM(g.fy25) + " → " + fmtM(g.fy26) }] };
+    }));
+  }
+  var rt; window.addEventListener("resize", function () { clearTimeout(rt); rt = setTimeout(drawCharts, 100); });
 
   function showBanner(doc, demo) {
     var b = $("banner");
@@ -216,7 +433,7 @@
       return "<tr>" +
         '<td><div class="t">' + esc(r.title) + '</div><div class="sub">' + esc(r.exhibit) + " line " + esc(r.line_number) +
           " · " + esc(r.pe_or_bli) + (r.cost_type && r.cost_type !== "Weapon System Cost" ? " · " + esc(r.cost_type) : "") +
-          (r.counts_in_total === false ? ' · <span class="tag">memo, not summed</span>' : "") + ' · <span class="tag' + (r.category === "C-UAS" ? " cuas" : "") + '">' + esc(r.category) +
+          (r.counts_in_total === false ? ' · <span class="tag">memo, not summed</span>' : "") + ' · <span class="tag' + (r.category === "C-UAS" ? " cuas" : r.category === "CCA" ? " cca" : "") + '">' + esc(r.category) +
           '</span> <span class="tag">' + esc(r.match_tier === "override" ? "hand-added" : (r.match_tier || "core")) + '</span> <span class="sub">' +
           (r.override_reason ? "hand-added: " + esc(r.override_reason) : "matched: " + esc((r.matched_keywords || []).join(", "))) +
           "</span></div></td>" +

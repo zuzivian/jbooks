@@ -34,6 +34,8 @@ import urllib.request
 import zipfile
 import xml.etree.ElementTree as ET
 
+import analyze
+
 ROOT = pathlib.Path(__file__).resolve().parent
 NS = {"m": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
@@ -41,7 +43,9 @@ REL_NS = "http://schemas.openxmlformats.org/officeDocument/2006/relationships"
 # ---------------------------------------------------------------------------
 # Keyword list. Matching is case-insensitive against the line title (and any
 # description column, if the exhibit has one). Each keyword has a category
-# ("C-UAS" wins over "UAS" when both match) and a tier:
+# ("C-UAS" wins over "CCA", which wins over "UAS", when several match) and a tier.
+# CCA (Collaborative Combat Aircraft) is a UAS program reported separately
+# because a few large lines would otherwise dominate the UAS total:
 #   core     - the agreed starting list
 #   extended - wider terms and a platform watch list, added to catch titles the
 #              core list misses (UAV, RPA, MQ-9...). Higher recall, more noise;
@@ -64,10 +68,11 @@ KEYWORDS = [
     ("unmanned air (abbrev.)", r"\bunman(?:ned)?[\s-]+air\b", "UAS", "extended"),
     ("uncrewed", r"\buncrewed[\s-]+(?:aircraft|aerial|air)\b", "UAS", "extended"),
     ("RPA", r"\bRPAs?\b", "UAS", "extended"),
-    ("collaborative combat aircraft", r"\bcollaborative[\s-]+combat[\s-]+aircraft", "UAS", "extended"),
+    ("collaborative combat aircraft", r"\bcollaborative[\s-]+combat[\s-]+aircraft", "CCA", "extended"),
     ("MQ-/RQ- designation", r"\b[MR]Q[\s-]?\d{1,2}[A-Z]?\b", "UAS", "extended"),
     ("platform name", r"\b(?:gr[ae]y[\s-]+eagle|global[\s-]+hawk|triton|reaper|stingray|switchblade)\b", "UAS", "extended"),
 ]
+CATEGORY_PRECEDENCE = ("C-UAS", "CCA", "UAS")
 _COMPILED = [(label, re.compile(rx, re.I), cat, tier) for label, rx, cat, tier in KEYWORDS]
 
 
@@ -81,7 +86,8 @@ def match_keywords(text: str) -> tuple[list[str], str | None, str | None]:
             tiers.add(tier)
     if not hits:
         return [], None, None
-    return hits, ("C-UAS" if "C-UAS" in cats else "UAS"), ("core" if "core" in tiers else "extended")
+    category = next(c for c in CATEGORY_PRECEDENCE if c in cats)
+    return hits, category, ("core" if "core" in tiers else "extended")
 
 
 # ---------------------------------------------------------------------------
@@ -225,17 +231,24 @@ def load_overrides(path: pathlib.Path | None) -> dict:
     """overrides.json: hand-reviewed decisions applied after the keyword screen.
 
     {"exclude": [{"exhibit": "R-1", "pe_or_bli": "0604123A", "account": "2040A", "reason": "..."}],
-     "include": [{"exhibit": "P-1", "pe_or_bli": "1234", "category": "C-UAS", "reason": "..."}]}
+     "include": [{"exhibit": "P-1", "pe_or_bli": "1234", "category": "C-UAS", "reason": "..."}],
+     "related_not_counted": {"lines": [{"exhibit": "R-1", "pe_or_bli": "0604117A", "group": "M-SHORAD", "reason": "..."}]}}
     "account" is optional; when given, the rule only applies to that appropriation code.
+    "related_not_counted" lines are read with their amounts but kept out of rows[] and every total.
     """
     if not path or not path.exists():
-        return {"exclude": [], "include": []}
+        return {"exclude": [], "include": [], "related": []}
     d = json.loads(path.read_text())
-    for k in ("exclude", "include"):
+    d["related"] = d.get("related_not_counted", {}).get("lines", [])
+    for k in ("exclude", "include", "related"):
         d.setdefault(k, [])
         for r in d[k]:
             if not r.get("exhibit") or not r.get("pe_or_bli") or not r.get("reason"):
                 raise ValueError(f"override needs exhibit, pe_or_bli and reason: {r}")
+            if k == "include" and r.get("category", "UAS") not in CATEGORY_PRECEDENCE:
+                raise ValueError(f"include category must be one of {CATEGORY_PRECEDENCE}: {r}")
+            if k == "related" and not r.get("group"):
+                raise ValueError(f"related_not_counted line needs a group: {r}")
     return d
 
 
@@ -269,13 +282,14 @@ def check_total_row(rows: list[list[object]], hi: int, cols: dict) -> dict:
 
 
 def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
-    """Return (rows, unreadable, excluded, total_check) for one exhibit file."""
-    overrides = overrides or {"exclude": [], "include": []}
+    """Return (rows, unreadable, excluded, total_check, related) for one exhibit file."""
+    overrides = overrides or {"exclude": [], "include": [], "related": []}
+    overrides.setdefault("related", [])
     rows = read_xlsx_rows(path)
     hi = find_header(rows)
     cols = map_columns(rows[hi])
     total_check = check_total_row(rows, hi, cols)
-    out, unreadable, excluded = [], [], []
+    out, unreadable, excluded, related = [], [], [], []
     exhibit = source.get("exhibit", "")
 
     def get(row, key):
@@ -289,7 +303,10 @@ def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
         pe, account = get(row, "pe_or_bli"), get(row, "account")
         hits, category, tier = match_keywords(title + " " + get(row, "description"))
         inc = _rule_for(overrides["include"], exhibit, pe, account)
-        if not hits and not inc:
+        rel = _rule_for(overrides["related"], exhibit, pe, account)
+        if rel and (hits or inc):
+            raise ValueError(f"{exhibit} {pe} is both a counted line and related_not_counted: {rel}")
+        if not hits and not inc and not rel:
             continue
         exc = _rule_for(overrides["exclude"], exhibit, pe, account)
         rid = f"{source['id']}:r{n}"
@@ -334,10 +351,14 @@ def screen(path: pathlib.Path, source: dict, overrides: dict | None = None):
             "source_url": source["url"],
             "source_row": n,
         }
-        out.append(rec)
         for b in bad:
             unreadable.append({"id": rid, **b})
-    return out, unreadable, excluded, total_check
+        if rel:
+            rec.update(category=None, match_tier="related", group=rel["group"], related_reason=rel["reason"])
+            related.append(rec)
+            continue
+        out.append(rec)
+    return out, unreadable, excluded, total_check, related
 
 
 def check_sha256sums(path: pathlib.Path) -> None:
@@ -383,6 +404,8 @@ def main(argv=None) -> int:
     ap.add_argument("--overrides", default=str(ROOT / "overrides.json"),
                     help="hand-reviewed include/exclude rules (default: overrides.json)")
     ap.add_argument("--out", default=str(ROOT / "data" / "lines.json"))
+    ap.add_argument("--changes", help="where to write the FY25->FY26 change view "
+                    "(default: changes.json next to --out, for live data)")
     a = ap.parse_args(argv)
 
     cfg = json.loads(pathlib.Path(a.sources).read_text())
@@ -417,9 +440,10 @@ def main(argv=None) -> int:
 
     ov_path = pathlib.Path(a.overrides) if a.overrides else None
     overrides = load_overrides(ov_path)
-    rows, unreadable, excluded, used = [], [], [], []
+    rows, unreadable, excluded, used, related = [], [], [], [], []
     for path, s in jobs:
-        r, u, x, tc = screen(path, s, overrides)
+        r, u, x, tc, rel = screen(path, s, overrides)
+        related += rel
         rows += r
         unreadable += u
         excluded += x
@@ -439,6 +463,11 @@ def main(argv=None) -> int:
                     x["exhibit"] == rule["exhibit"] and x["pe_or_bli"] == rule["pe_or_bli"] for x in excluded):
                 ap.error(f"exclude rule matched no line: {rule}")
 
+    rel_hit = {(r["exhibit"], r["pe_or_bli"]) for r in related}
+    for rule in overrides["related"]:
+        if rule["exhibit"] in exhibits_run and (rule["exhibit"], rule["pe_or_bli"]) not in rel_hit:
+            ap.error(f"related_not_counted line matched nothing: {rule}")
+
     doc = {
         "status": a.status,
         "generated_at": dt.datetime.now(dt.timezone.utc).replace(microsecond=0).isoformat(),
@@ -450,11 +479,16 @@ def main(argv=None) -> int:
         "sources": used,
         "unreadable": unreadable,
         "rows": rows,
+        "related_not_counted": related,
     }
     out = pathlib.Path(a.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(doc, indent=1) + "\n")
     print(f"wrote {len(rows)} rows to {out}", file=sys.stderr)
+    if a.status == "live" or a.changes:
+        changes_out = pathlib.Path(a.changes) if a.changes else out.with_name("changes.json")
+        changes_out.write_text(json.dumps(analyze.build(doc), indent=1) + "\n")
+        print(f"wrote FY25->FY26 change view to {changes_out}", file=sys.stderr)
     return 0
 
 

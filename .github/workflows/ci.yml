@@ -1,0 +1,45 @@
+name: CI
+on:
+  push:
+    branches: [main]
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Unit tests (extract + delta math + live data checks)
+        run: |
+          python3 tests/make_fixture.py
+          python3 -m unittest discover -s tests -v
+      - name: Re-extract committed sources and compare with data/
+        run: |
+          python3 extract.py --local --out "$RUNNER_TEMP/lines.json" --changes "$RUNNER_TEMP/changes.json"
+          python3 - "$RUNNER_TEMP" <<'PY'
+          import json, sys, pathlib
+          tmp = pathlib.Path(sys.argv[1])
+          for name in ("lines.json", "changes.json"):
+              new = json.loads((tmp / name).read_text())
+              old = json.loads(pathlib.Path("data", name).read_text())
+              for d in (new, old):
+                  d.pop("generated_at", None); d.pop("lines_generated_at", None)
+              if new != old:
+                  sys.exit(f"data/{name} differs from a fresh extract.py --local run")
+          print("committed data matches a fresh extraction")
+          PY
+          python3 analyze.py --check
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Browser check (Playwright, 1280px and 390px)
+        run: |
+          npm install --no-save --no-package-lock playwright@1.47.2
+          npx playwright install --with-deps chromium
+          python3 -m http.server 8000 &
+          sleep 1
+          node tests/browser_check.js http://localhost:8000

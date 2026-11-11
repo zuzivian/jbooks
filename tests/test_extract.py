@@ -42,7 +42,7 @@ class KeywordTests(unittest.TestCase):
         self.assertEqual(self.tier("SMALL UAS"), "core")
         self.assertEqual(self.tier("Counter-UAS and UAV support"), "core")
         for s, c in [("MQ-9 UAV", "UAS"), ("RQ-4 Global Hawk", "UAS"), ("Unmanned Aerial Vehicle", "UAS"),
-                     ("CTR SM UNMAN AIR SYS", "C-UAS"), ("Collaborative Combat Aircraft", "UAS"),
+                     ("CTR SM UNMAN AIR SYS", "C-UAS"), ("Collaborative Combat Aircraft", "CCA"),
                      ("MQ-25 Stingray", "UAS"), ("Uncrewed Aircraft", "UAS"), ("RPA Training", "UAS")]:
             self.assertEqual((self.cat(s), self.tier(s)), (c, "extended"), s)
 
