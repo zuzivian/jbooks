@@ -1,0 +1,52 @@
+{
+ "status": "not_fetched",
+ "generated_at": "2026-11-11T20:40:00+00:00",
+ "units": "thousands of US dollars, as printed in the exhibit",
+ "method": "case-insensitive keyword screen of line titles; see README",
+ "note": "No live rows yet. The build sandbox could not reach comptroller.war.gov or comptroller.defense.gov (proxy answered 403 to CONNECT). Run `python3 extract.py --fetch` from an unrestricted machine to fill this file. No figures here are invented; the viewer's demo mode uses data/sample.json, which is synthetic.",
+ "keywords": [
+  {
+   "label": "counter-UAS",
+   "regex": "\\bcounter[\\s-]*(?:small[\\s-]*)?(?:s?UAS|unmanned)",
+   "category": "C-UAS"
+  },
+  {
+   "label": "C-UAS",
+   "regex": "\\bC[\\s-]?s?UAS\\b",
+   "category": "C-UAS"
+  },
+  {
+   "label": "counter-small UAS",
+   "regex": "\\bcounter[\\s-]*small[\\s-]*(?:UAS|unmanned)",
+   "category": "C-UAS"
+  },
+  {
+   "label": "UAS",
+   "regex": "\\bs?UAS\\b",
+   "category": "UAS"
+  },
+  {
+   "label": "unmanned aircraft",
+   "regex": "\\bunmanned[\\s-]+aircraft",
+   "category": "UAS"
+  },
+  {
+   "label": "drone",
+   "regex": "\\bdrones?\\b",
+   "category": "UAS"
+  },
+  {
+   "label": "loitering munition",
+   "regex": "\\bloiter(?:ing)?[\\s-]+munitions?\\b",
+   "category": "UAS"
+  },
+  {
+   "label": "Replicator",
+   "regex": "\\breplicator\\b",
+   "category": "UAS"
+  }
+ ],
+ "sources": [],
+ "unreadable": [],
+ "rows": []
+}

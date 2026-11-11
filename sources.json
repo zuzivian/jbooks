@@ -1,0 +1,22 @@
+{
+  "_comment": "Machine-readable DoD budget exhibits screened by extract.py. Amounts in these exhibits are in thousands of dollars. Verify URLs each budget cycle: the Comptroller site moved from comptroller.defense.gov to comptroller.war.gov in 2025.",
+  "index_page": "https://comptroller.war.gov/Budget-Materials/Budget2026/",
+  "sources": [
+    {
+      "id": "fy2026-p1",
+      "exhibit": "P-1",
+      "fiscal_year": 2026,
+      "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
+      "pdf_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/FY2026_p1.pdf",
+      "url_status": "listed in web search results for the FY2026 folder; not downloaded from this sandbox"
+    },
+    {
+      "id": "fy2026-r1",
+      "exhibit": "R-1",
+      "fiscal_year": 2026,
+      "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
+      "pdf_url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/FY2026_r1.pdf",
+      "url_status": "UNVERIFIED: inferred from the P-1 filename pattern; confirm on the index page before relying on it"
+    }
+  ]
+}
