@@ -1,6 +1,6 @@
 {
  "status": "live",
- "generated_at": "2026-11-11T23:29:45+00:00",
+ "generated_at": "2026-11-12T06:26:44+00:00",
  "units": "thousands of US dollars, as printed in the exhibit",
  "method": "case-insensitive keyword screen of line titles, then hand-reviewed overrides; see README",
  "keywords": [
@@ -126,7 +126,7 @@
    "exhibit": "P-1",
    "fiscal_year": 2026,
    "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/p1_display.xlsx",
-   "url_status": "Expected Comptroller path (listed for the FY2026 folder in search results). Copy downloaded manually by Nat in a browser on 2026-11-11; exact click-through URL not captured.",
+   "url_status": "Expected Comptroller path (listed for the FY2026 folder in search results). Copy downloaded manually by the maintainer in a browser on 2026-11-11; exact click-through URL not captured.",
    "sha256": "4d965906ad91aa8b7d6d5f891a0717ac25ace6c18f3d50df07ebde611774a9c0",
    "lines_matched": 36,
    "lines_excluded": 1,
@@ -161,7 +161,7 @@
    "exhibit": "R-1",
    "fiscal_year": 2026,
    "url": "https://comptroller.war.gov/Portals/45/Documents/defbudget/FY2026/r1_display.xlsx",
-   "url_status": "Path inferred from the P-1 filename. Copy downloaded manually by Nat in a browser on 2026-11-11; exact click-through URL not captured.",
+   "url_status": "Path inferred from the P-1 filename. Copy downloaded manually by the maintainer in a browser on 2026-11-11; exact click-through URL not captured.",
    "sha256": "671c8e816b9abc666754982b25a15bc6a89e22926e21dd322b6be106dc83cc2e",
    "lines_matched": 35,
    "lines_excluded": 0,
