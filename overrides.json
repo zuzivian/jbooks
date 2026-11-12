@@ -47,17 +47,121 @@
     }
   ],
   "reviewed": "2026-11-11, FY2026 P-1/R-1, from titles only (J-book narratives not yet read). Every kept keyword hit was read; misses were looked for with a broader term scan (unmanned, autonomous, launched effects, counter-, air defense, directed energy, targets, robotics).",
-  "not_included_mixed_lines": {
-    "_comment": "Lines with a real but unknown C-UAS/UAS share. They're left out because the exhibits can't split them. Candidates for slice 2, which reads the J-book narrative.",
+  "related_not_counted": {
+    "_comment": "Lines with a real but unknown UAS/C-UAS share. extract.py reads their amounts into data/lines.json under related_not_counted, but they are in no total. Each needs a group and a reason. The R-2/P-40 J-book documents listed in the README ('PDFs needed') would let slice 3 move a firm share into the counted lines.",
     "lines": [
-      "Army M-SHORAD (P-1 8082C14300, R-1 0604117A)",
-      "Marine Corps Ground Based Air Defense (P-1 3006)",
-      "Air Force Airbase Air Defense Systems (R-1 0207522F)",
-      "Navy Directed Energy Systems (P-1 5510) and directed-energy/HEL RDT&E PEs",
-      "Army Future Interceptor (R-1 0604403A)",
-      "Defense Innovation Unit (R-1 0603342D8Z, 0604341D8Z)",
-      "DoD Unmanned System Common Development (R-1 0604400D8Z)",
-      "Marine Corps Unmanned Expeditionary Systems (P-1 4758)"
+      {
+        "exhibit": "P-1",
+        "pe_or_bli": "8082C14300",
+        "account": "2032A",
+        "group": "M-SHORAD",
+        "reason": "Army mobile short-range air defence for manoeuvre units. It is built to defeat drones as well as helicopters and fixed-wing aircraft; the P-1 does not split the share."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0604117A",
+        "account": "2040A",
+        "group": "M-SHORAD",
+        "reason": "RDT&E counterpart of the M-SHORAD procurement line. Same mixed mission; the R-1 gives one figure."
+      },
+      {
+        "exhibit": "P-1",
+        "pe_or_bli": "3006",
+        "account": "1109N",
+        "group": "Marine Corps GBAD / MADIS",
+        "reason": "Marine Corps Ground Based Air Defense, the line that buys MADIS counter-drone systems alongside other air-defence equipment. One figure for the whole line."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0605520M",
+        "account": "1319N",
+        "group": "Marine Corps GBAD / MADIS",
+        "reason": "Marine Corps air-defence weapons RDT&E. The title does not say how much is counter-drone work."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0207522F",
+        "account": "3600F",
+        "group": "Airbase air defence (ABADS)",
+        "reason": "Air Force airbase air-defence systems. Drones are one threat among several; the share is not in the exhibit."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0604403A",
+        "account": "2040A",
+        "group": "Interceptors",
+        "reason": "Army Future Interceptor. The title does not say which air threats it targets."
+      },
+      {
+        "exhibit": "P-1",
+        "pe_or_bli": "5510",
+        "account": "1810N",
+        "group": "Directed energy",
+        "reason": "Directed-energy weapons can engage drones, but this line also covers other targets and general laser/microwave technology. The exhibit gives one figure."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0603925N",
+        "account": "1319N",
+        "group": "Directed energy",
+        "reason": "Directed-energy weapons can engage drones, but this line also covers other targets and general laser/microwave technology. The exhibit gives one figure."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0602605F",
+        "account": "3600F",
+        "group": "Directed energy",
+        "reason": "Directed-energy weapons can engage drones, but this line also covers other targets and general laser/microwave technology. The exhibit gives one figure."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0603924D8Z",
+        "account": "0400D",
+        "group": "Directed energy",
+        "reason": "Directed-energy weapons can engage drones, but this line also covers other targets and general laser/microwave technology. The exhibit gives one figure."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0604924D8Z",
+        "account": "0400D",
+        "group": "Directed energy",
+        "reason": "Directed-energy weapons can engage drones, but this line also covers other targets and general laser/microwave technology. The exhibit gives one figure."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0603342D8Z",
+        "account": "0400D",
+        "group": "DIU",
+        "reason": "Defense Innovation Unit funds commercial prototypes across many technologies, drones and counter-drone systems among them. The share is not in the exhibit."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0604341D8Z",
+        "account": "0400D",
+        "group": "DIU",
+        "reason": "DIU Prototyping. Same mixed portfolio; FY2024 money only."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0608776D8Z",
+        "account": "0400D",
+        "group": "DIU",
+        "reason": "DIU Fielding. Same mixed portfolio; the air-drone share is not stated."
+      },
+      {
+        "exhibit": "R-1",
+        "pe_or_bli": "0604400D8Z",
+        "account": "0400D",
+        "group": "Unmanned systems, domain not stated",
+        "reason": "Common development for unmanned systems; the title does not say how much is for aircraft rather than ground or sea vehicles."
+      },
+      {
+        "exhibit": "P-1",
+        "pe_or_bli": "4758",
+        "account": "1109N",
+        "group": "Unmanned systems, domain not stated",
+        "reason": "Marine Corps 'Unmanned Expeditionary Systems'. The title does not name a domain (air, ground or sea)."
+      }
     ]
   }
 }
