@@ -1,7 +1,7 @@
 {
  "status": "live",
  "built_from": "data/lines.json",
- "lines_generated_at": "2026-11-11T23:29:45+00:00",
+ "lines_generated_at": "2026-11-12T06:26:44+00:00",
  "units": "thousands of US dollars",
  "base_column": "FY 2025 Enacted",
  "request_column": "FY 2026 Total",

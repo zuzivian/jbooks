@@ -180,7 +180,7 @@ The plan is to publish the viewer publicly, for example on GitHub Pages from `ma
 2. Every kept line has been read against the PDF exhibit, and each false hit is recorded in `overrides.json` with a reason. *(Titles reviewed; PDF/J-book check not yet done. Needs the PDFs above.)*
 3. The `lines_matched` counts and per-service totals are spot-checked against the R-1/P-1 PDFs (`FY2026_r1.pdf`, `FY2026_p1.pdf`). *(Not done: the PDFs aren't in the repo and can't be fetched from the cloud.)*
 4. The change view and key findings have been read by a person, and the "matched lines only" label is on the page. *(Label is on the page; human read not yet done.)*
-5. The repository has nothing private in it. `sources.json` and `data/lines.json` name the person who downloaded the files ("Nat"); decide whether that stays. Then, in Settings → Pages, deploy from branch `main`, folder `/`. The site needs no build step.
+5. The repository has nothing private in it. The downloader is recorded only as "the maintainer" (anonymised 2026-11-12). Then, in Settings → Pages, deploy from branch `main`, folder `/`. The site needs no build step.
 
 The synthetic `data/sample.json` stays in the repo for the demo. The page shows it only behind the "Synthetic demo data" banner.
 
